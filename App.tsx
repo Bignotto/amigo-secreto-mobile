@@ -8,6 +8,7 @@ import {
 } from "@expo-google-fonts/inter";
 import Routes from "@routes/index";
 
+import { AppAuthProvider } from "@hooks/AuthContext";
 import * as SecureStore from "expo-secure-store";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { ThemeProvider } from "styled-components";
@@ -48,7 +49,9 @@ export default function App() {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <ThemeProvider theme={DefaultTheme}>
         <ClerkProvider publishableKey={`${CLERK_KEY}`} tokenCache={tokenCache}>
-          <Routes />
+          <AppAuthProvider>
+            <Routes />
+          </AppAuthProvider>
         </ClerkProvider>
       </ThemeProvider>
     </GestureHandlerRootView>

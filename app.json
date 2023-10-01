@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "Expo Template 2023",
-    "slug": "expo-template-2023",
-    "scheme": "expo-template-2023",
+    "name": "Amigo Secreto Mobile",
+    "slug": "amigo-secreto-mobile",
+    "scheme": "amigo-secreto-mobile",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",

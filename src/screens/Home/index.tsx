@@ -1,16 +1,16 @@
-import { SignedIn, SignedOut, useAuth, useUser } from "@clerk/clerk-expo";
+import { SignedIn, SignedOut, useUser } from "@clerk/clerk-expo";
 import AppButton from "@components/AppButton";
 import AppScreenContainer from "@components/AppScreenContainer";
 import AppText from "@components/AppText";
+import { appUseAuth } from "@hooks/AuthContext";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { StackParamList } from "@routes/Navigation.types";
 
 export default function Home() {
-  const { userId, signOut, sessionId } = useAuth();
-  const { user } = useUser();
-
   const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
+  const { appSignOut } = appUseAuth();
+  const { user } = useUser();
 
   return (
     <AppScreenContainer>
@@ -20,9 +20,8 @@ export default function Home() {
       <AppText>Template version: 2</AppText>
 
       <SignedIn>
-        <AppText>User logged in: {user?.fullName}</AppText>
-        <AppText>Session id is: {sessionId}</AppText>
-        <AppButton title="Log out" onPress={() => signOut()} />
+        <AppText>{user?.primaryEmailAddress?.emailAddress}</AppText>
+        <AppButton title="Log out" onPress={() => appSignOut()} />
       </SignedIn>
       <SignedOut>
         <AppText>No user logged in</AppText>
