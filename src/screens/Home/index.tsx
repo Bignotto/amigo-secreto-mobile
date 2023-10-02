@@ -7,14 +7,15 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { StackParamList } from "@routes/Navigation.types";
 import supabase from "@services/supabase";
 import { useEffect, useState } from "react";
+import { UserProfile } from "src/@types/UserProfile";
 
 export default function Home() {
   const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
-  const { isSignedIn, isLoaded, signOut } = useAuth();
+  const { isSignedIn, isLoaded, signOut, userId } = useAuth();
   const { user } = useUser();
 
   const [profileComplete, setProfileComplete] = useState(0);
-  const [userProfile, setUserProfile] = useState();
+  const [userProfile, setUserProfile] = useState<UserProfile>();
 
   useEffect(() => {
     async function loadProfile() {
@@ -23,16 +24,30 @@ export default function Home() {
           .from("users")
           .select()
           .eq("email", user?.primaryEmailAddress?.emailAddress);
-        console.log({ data });
         if (error) {
           console.log({ error });
           return;
         }
 
-        if (data?.length === 0) {
+        if (data?.length === 0 && isSignedIn) {
+          let { data, error } = await supabase.from("users").insert([
+            {
+              id: userId,
+              email: user?.primaryEmailAddress?.emailAddress,
+              name: user?.fullName,
+            },
+          ]);
           setProfileComplete(0);
+          if (error) console.log({ error });
           return;
+        } else if (data?.length) {
+          setUserProfile(data[0]);
+          //NEXT: validate filled fields
         }
+
+        let profilePoints = 0;
+
+        console.log({ data });
       } catch (error) {}
     }
     if (isSignedIn) loadProfile();

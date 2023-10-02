@@ -15,7 +15,6 @@ export const ButtonContainer = styled(RectButton)<ButtonProps>`
 
   background-color: ${({ theme, color }) =>
     color ? color : theme.colors.primary};
-  margin-bottom: 8px;
   height: 46px;
 `;
 
