@@ -8,9 +8,10 @@ import {
 
 type AppLogoProps = {
   size?: "sm" | "md" | "lg";
+  color?: "primary" | "secondary" | "positive" | "negative";
 };
 
-export default function AppLogo({ size = "md" }: AppLogoProps) {
+export default function AppLogo({ size = "md", color }: AppLogoProps) {
   return (
     <AppLogoContainer>
       {size === "lg" && <AppLogoTextLG>Amigo Secreto</AppLogoTextLG>}
