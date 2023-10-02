@@ -6,6 +6,11 @@ import {
   Inter_900Black,
   useFonts,
 } from "@expo-google-fonts/inter";
+
+import {
+  Pacifico_400Regular,
+  useFonts as usePFonts,
+} from "@expo-google-fonts/pacifico";
 import Routes from "@routes/index";
 
 import * as SecureStore from "expo-secure-store";
@@ -38,6 +43,10 @@ export default function App() {
     Inter_300Light,
     Inter_400Regular,
     Inter_700Bold,
+  });
+
+  [fontsLoaded, fontError] = usePFonts({
+    Pacifico_400Regular,
   });
 
   if (!fontsLoaded && !fontError) {
