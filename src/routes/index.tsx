@@ -2,6 +2,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Home from "@screens/Home";
 import OAuthSignIn from "@screens/OAuthSignIn";
+import Profile from "@screens/Profile";
 
 const Stack = createNativeStackNavigator();
 
@@ -13,16 +14,10 @@ export default function Routes() {
           headerShown: false,
         }}
       >
-        <Stack.Screen
-          name="Home"
-          component={Home}
-          options={{ title: "Home Screen" }}
-        />
-        <Stack.Screen
-          name="OAuthSignIn"
-          component={OAuthSignIn}
-          options={{ title: "OAuth Login" }}
-        />
+        <Stack.Screen name="Home" component={Home} />
+        <Stack.Screen name="OAuthSignIn" component={OAuthSignIn} />
+
+        <Stack.Screen name="Profile" component={Profile} />
       </Stack.Navigator>
     </NavigationContainer>
   );

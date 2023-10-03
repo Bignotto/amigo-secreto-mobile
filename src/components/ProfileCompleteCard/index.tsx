@@ -1,5 +1,8 @@
 import AppButton from "@components/AppButton";
 import AppText from "@components/AppText";
+import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { StackParamList } from "@routes/Navigation.types";
 import React from "react";
 import {
   AvatarImage,
@@ -19,6 +22,8 @@ export default function ProfileCompleteCard({
   userName,
   avatarUrl,
 }: ProfileCompletedCardProps) {
+  const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
+
   return (
     <Container>
       <AppText bold>Complete seu perfil</AppText>
@@ -36,7 +41,10 @@ export default function ProfileCompleteCard({
           </AppText>
         </ProfileTextContainer>
       </ProfileInfoContainer>
-      <AppButton title="Completar perfil" />
+      <AppButton
+        title="Completar perfil"
+        onPress={() => navigation.navigate("Profile")}
+      />
     </Container>
   );
 }

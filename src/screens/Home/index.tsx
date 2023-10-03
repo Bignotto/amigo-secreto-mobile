@@ -1,5 +1,6 @@
 import { useAuth, useUser } from "@clerk/clerk-expo";
 import AppScreenContainer from "@components/AppScreenContainer";
+import AppSpacer from "@components/AppSpacer";
 import Header from "@components/Header";
 import ProfileCompleteCard from "@components/ProfileCompleteCard";
 import { useNavigation } from "@react-navigation/native";
@@ -66,10 +67,11 @@ export default function Home() {
   return (
     <AppScreenContainer>
       <Header />
+      <AppSpacer verticalSpace="xlg" />
       <ProfileCompleteCard
         avatarUrl={`${user?.imageUrl}`}
         userName={`${user?.fullName}`}
-        percentCompeted={0}
+        percentCompeted={profileComplete}
       />
     </AppScreenContainer>
   );
