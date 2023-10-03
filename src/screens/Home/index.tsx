@@ -37,17 +37,27 @@ export default function Home() {
               name: user?.fullName,
             },
           ]);
+          setUserProfile({
+            id: userId,
+            email: `${user?.primaryEmailAddress?.emailAddress}`,
+            name: `${user?.fullName}`,
+          });
           setProfileComplete(0);
+
           if (error) console.log({ error });
           return;
-        } else if (data?.length) {
-          setUserProfile(data[0]);
-          //NEXT: validate filled fields
         }
 
-        let profilePoints = 0;
+        setUserProfile(data![0]);
 
-        console.log({ data });
+        let profilePoints = 0;
+        const profile: UserProfile = data![0];
+        if (profile.clothesSize) profilePoints += 25;
+        if (profile.shoeSize) profilePoints += 25;
+        if (profile.likeThings) profilePoints += 25;
+        if (profile.dontLikeThings) profilePoints += 25;
+
+        setProfileComplete(profilePoints);
       } catch (error) {}
     }
     if (isSignedIn) loadProfile();
