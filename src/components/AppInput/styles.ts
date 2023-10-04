@@ -5,7 +5,7 @@ import styled from "styled-components/native";
 export const Container = styled.View``;
 
 export const Wrapper = styled.View`
-  background-color: ${({ theme }) => theme.colors.shape};
+  background-color: ${({ theme }) => theme.colors.shape_light};
   border-radius: 5px;
 `;
 

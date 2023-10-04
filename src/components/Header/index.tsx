@@ -1,6 +1,9 @@
 import { useUser } from "@clerk/clerk-expo";
 import AppText from "@components/AppText";
 import { FontAwesome5, MaterialCommunityIcons } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { StackParamList } from "@routes/Navigation.types";
 import React from "react";
 import {
   AvatarContainer,
@@ -12,6 +15,8 @@ import {
 } from "./styles";
 
 export default function Header() {
+  const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
+
   const { user } = useUser();
   return (
     <Container>
@@ -29,10 +34,10 @@ export default function Header() {
         </AppText>
       </MidContainer>
       <ButtonsContainer>
-        <IconButton>
+        <IconButton onPress={() => navigation.navigate("Profile")}>
           <FontAwesome5 name="user-edit" size={28} color="black" />
         </IconButton>
-        <IconButton>
+        <IconButton onPress={() => navigation.navigate("Profile")}>
           <MaterialCommunityIcons name="logout" size={32} color="black" />
         </IconButton>
       </ButtonsContainer>
