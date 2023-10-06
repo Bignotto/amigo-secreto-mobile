@@ -4,34 +4,42 @@ import AppScreenContainer from "@components/AppScreenContainer";
 import AppText from "@components/AppText";
 import { useWarmUpBrowser } from "@hooks/warmUpBrowser";
 import { useNavigation } from "@react-navigation/native";
-import { useCallback } from "react";
+import { useState } from "react";
+import { ActivityIndicator } from "react-native";
 
 export default function OAuthSignIn() {
   useWarmUpBrowser();
 
   const navigation = useNavigation();
+
+  const [isLoading, setIsLoading] = useState(false);
+
   const { startOAuthFlow } = useOAuth({ strategy: "oauth_google" });
 
-  const handleGoogle = useCallback(async () => {
+  async function appSignIn() {
+    setIsLoading(true);
     try {
-      const { createdSessionId, signIn, signUp, setActive } =
-        await startOAuthFlow();
+      const { createdSessionId, setActive } = await startOAuthFlow();
 
       if (createdSessionId) {
         setActive!({ session: createdSessionId });
         navigation.goBack();
-      } else {
-        // Use signIn or signUp for next steps such as MFA
       }
     } catch (err) {
       console.error("OAuth error", err);
+    } finally {
+      setIsLoading(false);
     }
-  }, []);
+  }
 
   return (
     <AppScreenContainer>
       <AppText>Login com google</AppText>
-      <AppButton title="Google login" onPress={handleGoogle} />
+      {isLoading ? (
+        <ActivityIndicator />
+      ) : (
+        <AppButton title="Google login" onPress={appSignIn} />
+      )}
     </AppScreenContainer>
   );
 }

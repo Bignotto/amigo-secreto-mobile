@@ -1,36 +1,87 @@
-import { SignedIn, SignedOut, useAuth, useUser } from "@clerk/clerk-expo";
-import AppButton from "@components/AppButton";
+import { useAuth, useUser } from "@clerk/clerk-expo";
 import AppScreenContainer from "@components/AppScreenContainer";
-import AppText from "@components/AppText";
-import { useNavigation } from "@react-navigation/native";
+import AppSpacer from "@components/AppSpacer";
+import Header from "@components/Header";
+import ProfileCompleteCard from "@components/ProfileCompleteCard";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { StackParamList } from "@routes/Navigation.types";
+import supabase from "@services/supabase";
+import { useCallback, useEffect, useState } from "react";
+import { UserProfile } from "src/@types/UserProfile";
 
 export default function Home() {
-  const { userId, signOut, sessionId } = useAuth();
+  const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
+  const { isSignedIn, isLoaded, signOut, userId } = useAuth();
   const { user } = useUser();
 
-  const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
+  const [profileComplete, setProfileComplete] = useState(0);
+  const [userProfile, setUserProfile] = useState<UserProfile>();
+
+  async function loadProfile() {
+    try {
+      let { data, error } = await supabase
+        .from("users")
+        .select()
+        .eq("email", user?.primaryEmailAddress?.emailAddress);
+      if (error) {
+        console.log({ error });
+        return;
+      }
+
+      if (data?.length === 0 && isSignedIn) {
+        let { data, error } = await supabase.from("users").insert([
+          {
+            id: userId,
+            email: user?.primaryEmailAddress?.emailAddress,
+            name: user?.fullName,
+          },
+        ]);
+        setUserProfile({
+          id: userId,
+          email: `${user?.primaryEmailAddress?.emailAddress}`,
+          name: `${user?.fullName}`,
+        });
+        setProfileComplete(0);
+
+        if (error) console.log({ error });
+        return;
+      }
+
+      setUserProfile(data![0]);
+
+      let profilePoints = 0;
+      const profile: UserProfile = data![0];
+      if (profile.clothesSize) profilePoints += 25;
+      if (profile.shoeSize) profilePoints += 25;
+      if (profile.likeThings) profilePoints += 25;
+      if (profile.dontLikeThings) profilePoints += 25;
+
+      setProfileComplete(profilePoints);
+    } catch (error) {}
+  }
+
+  useEffect(() => {
+    if (isSignedIn) loadProfile();
+  }, [isSignedIn]);
+
+  useFocusEffect(
+    useCallback(() => {
+      loadProfile();
+    }, [])
+  );
 
   return (
     <AppScreenContainer>
-      <AppText>
-        RN Expo StyledComponents with Stack Navigation and Clerk authentication
-      </AppText>
-      <AppText>Template version: 2</AppText>
-
-      <SignedIn>
-        <AppText>User logged in: {user?.fullName}</AppText>
-        <AppText>Session id is: {sessionId}</AppText>
-        <AppButton title="Log out" onPress={() => signOut()} />
-      </SignedIn>
-      <SignedOut>
-        <AppText>No user logged in</AppText>
-        <AppButton
-          title="Login"
-          onPress={() => navigation.navigate("OAuthSignIn")}
+      <Header />
+      <AppSpacer verticalSpace="xlg" />
+      {profileComplete < 100 && (
+        <ProfileCompleteCard
+          avatarUrl={`${user?.imageUrl}`}
+          userName={`${user?.fullName}`}
+          percentCompeted={profileComplete}
         />
-      </SignedOut>
+      )}
     </AppScreenContainer>
   );
 }

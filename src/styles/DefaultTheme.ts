@@ -1,24 +1,28 @@
 export default {
   colors: {
-    primary: "#4299E1",
-    primary_dark: "#2C5282",
+    primary: "#104D87",
+    primary_dark: "rgba(16,77,135,0.3)",
 
     secondary: "#FF872C",
     secondary_dark: "rgba(255,135,44,0.3)",
 
-    positive: "#12A454",
-    positive_light: "rgba(18,164,84,.1)",
+    positive: "#254441",
+    positive_light: "rgba(37,68,65,0.5)",
 
-    negative: "#E83F5B",
-    negative_light: "rgba(232,63,91,.1)",
+    negative: "#EB2828",
+    negative_light: "rgba(235,40,40,0.3)",
 
-    background: "#CBD5E0",
-    text: "#1A202C",
+    background: "#FFFCF2",
+    text: "#252422",
     text_dark: "#0F111A",
+    text_light: "#FFFCF2",
+
     text_gray: "#4A5568",
     text_disabled: "#718096",
-    shape: "#E2E8F0",
-    border: "#4A5568",
+
+    shape_dark: "#403D39",
+    shape_light: "#CCC5B9",
+    border: "#252422",
 
     white: "#FFFFFF",
   },
@@ -28,5 +32,18 @@ export default {
     black: "Inter_900Black",
     regular: "Inter_400Regular",
     bold: "Inter_700Bold",
+    logo: "Pacifico_400Regular",
   },
 };
+
+/*
+FFFCF2
+CCC5B9
+403D39
+252422
+EB5E28
+
+positive 254441
+negative EB2828
+theblue  104D87
+*/
