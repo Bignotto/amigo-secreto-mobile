@@ -1,3 +1,4 @@
+import { ActivityIndicator } from "react-native";
 import { RectButtonProps } from "react-native-gesture-handler";
 import { useTheme } from "styled-components";
 import { ButtonContainer, ButtonText } from "./styles";
@@ -5,11 +6,13 @@ import { ButtonContainer, ButtonText } from "./styles";
 type AppButtonProps = RectButtonProps & {
   title: string;
   variant?: "positive" | "solid" | "negative";
+  isLoading?: boolean;
 };
 
 export default function AppButton({
   title,
   variant = "solid",
+  isLoading = false,
   ...rest
 }: AppButtonProps) {
   const theme = useTheme();
@@ -23,7 +26,7 @@ export default function AppButton({
 
   return (
     <ButtonContainer color={buttonCollor} {...rest}>
-      <ButtonText>{title}</ButtonText>
+      {isLoading ? <ActivityIndicator /> : <ButtonText>{title}</ButtonText>}
     </ButtonContainer>
   );
 }

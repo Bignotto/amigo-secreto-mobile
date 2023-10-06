@@ -3,17 +3,18 @@ import { Text, TextProps } from "react-native";
 import styled from "styled-components/native";
 
 const TextSizes: { [size: string]: number } = {
-  xlg: 32,
-  lg: 24,
+  xxlg: 32,
+  xlg: 24,
+  lg: 20,
   md: 16,
   sm: 12,
-  sxm: 8,
+  xsm: 8,
 };
 
 export interface AppTextStyleProps extends TextProps {
   children: ReactNode;
   bold?: boolean;
-  size?: "xlg" | "lg" | "md" | "sm" | "xsm";
+  size?: "xxlg" | "xlg" | "lg" | "md" | "sm" | "xsm";
   color?: string;
 }
 

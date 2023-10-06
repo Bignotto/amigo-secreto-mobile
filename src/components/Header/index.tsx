@@ -1,4 +1,4 @@
-import { useUser } from "@clerk/clerk-expo";
+import { useAuth, useUser } from "@clerk/clerk-expo";
 import AppText from "@components/AppText";
 import { FontAwesome5, MaterialCommunityIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
@@ -16,6 +16,7 @@ import {
 
 export default function Header() {
   const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
+  const { signOut } = useAuth();
 
   const { user } = useUser();
   return (
@@ -29,7 +30,7 @@ export default function Header() {
       </AvatarContainer>
       <MidContainer>
         <AppText bold>Olá 👋</AppText>
-        <AppText bold size="lg">
+        <AppText bold size="xlg">
           {user?.firstName}
         </AppText>
       </MidContainer>
@@ -37,7 +38,7 @@ export default function Header() {
         <IconButton onPress={() => navigation.navigate("Profile")}>
           <FontAwesome5 name="user-edit" size={28} color="black" />
         </IconButton>
-        <IconButton onPress={() => navigation.navigate("Profile")}>
+        <IconButton onPress={() => signOut()}>
           <MaterialCommunityIcons name="logout" size={32} color="black" />
         </IconButton>
       </ButtonsContainer>
