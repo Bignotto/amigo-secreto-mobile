@@ -1,13 +1,4 @@
-import { ReactNode } from "react";
-import {
-  BorderlessButton,
-  BorderlessButtonProps,
-} from "react-native-gesture-handler";
 import styled from "styled-components/native";
-
-interface ButtonProps extends BorderlessButtonProps {
-  children: ReactNode;
-}
 
 export const Container = styled.View`
   flex-direction: row;
@@ -31,9 +22,4 @@ export const MidContainer = styled.View`
 export const ButtonsContainer = styled.View`
   flex-direction: row;
   gap: 12px;
-`;
-
-export const IconButton = styled(BorderlessButton)<ButtonProps>`
-  align-items: center;
-  justify-content: center;
 `;

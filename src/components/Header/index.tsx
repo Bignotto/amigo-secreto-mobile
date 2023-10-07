@@ -1,4 +1,5 @@
 import { useAuth, useUser } from "@clerk/clerk-expo";
+import AppIconButton from "@components/AppIconButton";
 import AppText from "@components/AppText";
 import { FontAwesome5, MaterialCommunityIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
@@ -10,7 +11,6 @@ import {
   AvatarImage,
   ButtonsContainer,
   Container,
-  IconButton,
   MidContainer,
 } from "./styles";
 
@@ -35,12 +35,12 @@ export default function Header() {
         </AppText>
       </MidContainer>
       <ButtonsContainer>
-        <IconButton onPress={() => navigation.navigate("Profile")}>
+        <AppIconButton onPress={() => navigation.navigate("Profile")}>
           <FontAwesome5 name="user-edit" size={28} color="black" />
-        </IconButton>
-        <IconButton onPress={() => signOut()}>
+        </AppIconButton>
+        <AppIconButton onPress={() => signOut()}>
           <MaterialCommunityIcons name="logout" size={32} color="black" />
-        </IconButton>
+        </AppIconButton>
       </ButtonsContainer>
     </Container>
   );
