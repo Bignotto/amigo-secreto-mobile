@@ -51,6 +51,7 @@ export default function Home() {
         return;
       }
 
+      //TODO: move this to profile card component
       let profilePoints = 0;
       const profile: UserProfile = data![0];
       if (profile.clothesSize) profilePoints += 25;

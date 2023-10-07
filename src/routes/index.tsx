@@ -1,6 +1,7 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import CreateFriendGroup from "@screens/CreateFriendGroup";
+import FriendGroupDetails from "@screens/FriendGroupDetails";
 import Home from "@screens/Home";
 import OAuthSignIn from "@screens/OAuthSignIn";
 import Profile from "@screens/Profile";
@@ -20,6 +21,10 @@ export default function Routes() {
 
         <Stack.Screen name="Profile" component={Profile} />
         <Stack.Screen name="CreateFriendGroup" component={CreateFriendGroup} />
+        <Stack.Screen
+          name="FriendGroupDetails"
+          component={FriendGroupDetails}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

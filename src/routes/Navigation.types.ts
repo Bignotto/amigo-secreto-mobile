@@ -3,4 +3,9 @@ export type StackParamList = {
   OAuthSignIn: {} | undefined;
   Profile: {} | undefined;
   CreateFriendGroup: {} | undefined;
+  FriendGroupDetails:
+    | {
+        groupId: number;
+      }
+    | undefined;
 };

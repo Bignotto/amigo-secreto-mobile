@@ -66,6 +66,7 @@ export default function Dashboard() {
                   groupName={group.title}
                   friendsCount={8}
                   key={group.id}
+                  groupId={group.id}
                 />
               ))}
           </GroupList>

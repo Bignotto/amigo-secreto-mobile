@@ -12,7 +12,7 @@ export default function AppInput({ label, ...rest }: AppInputProps) {
       {label && (
         <AppText
           style={{
-            marginBottom: 8,
+            marginBottom: 4,
           }}
         >
           {label}
