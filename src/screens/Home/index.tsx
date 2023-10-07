@@ -9,6 +9,7 @@ import { StackParamList } from "@routes/Navigation.types";
 import supabase from "@services/supabase";
 import { useCallback, useEffect, useState } from "react";
 import { UserProfile } from "src/@types/UserProfile";
+import Dashboard from "./Dashboard";
 import SignUp from "./SignUp";
 
 export default function Home() {
@@ -17,20 +18,7 @@ export default function Home() {
   const { user } = useUser();
 
   const [profileComplete, setProfileComplete] = useState(0);
-
-  async function loadUserGroups() {
-    let { data, error } = await supabase
-      .from("user_friends_group")
-      .select("*,friends_groups(*)")
-      .eq("user_id", userId);
-    if (error) {
-      console.log({ error, key: error.details });
-      return;
-    }
-    console.log({ grupos: data?.length });
-    console.log({ data, groups: data![0].friends_groups });
-    //NEXT: list user groups in home screen
-  }
+  const [userProfile, setUserProfile] = useState<UserProfile>();
 
   async function loadProfile() {
     try {
@@ -43,6 +31,8 @@ export default function Home() {
         return;
       }
 
+      setUserProfile(data![0]);
+
       if (data?.length === 0 && isSignedIn) {
         let { data, error } = await supabase.from("users").insert([
           {
@@ -52,7 +42,11 @@ export default function Home() {
           },
         ]);
         setProfileComplete(0);
-
+        setUserProfile({
+          id: userId,
+          email: `${user?.primaryEmailAddress?.emailAddress}`,
+          name: `${user?.fullName}`,
+        });
         if (error) console.log({ error });
         return;
       }
@@ -71,7 +65,6 @@ export default function Home() {
   useEffect(() => {
     if (isSignedIn) {
       loadProfile();
-      loadUserGroups();
     }
   }, [isSignedIn]);
 
@@ -85,14 +78,18 @@ export default function Home() {
     <AppScreenContainer>
       <SignedIn>
         <Header />
-        <AppSpacer verticalSpace="xlg" />
         {profileComplete < 100 && (
-          <ProfileCompleteCard
-            avatarUrl={`${user?.imageUrl}`}
-            userName={`${user?.firstName}`}
-            percentCompeted={profileComplete}
-          />
+          <>
+            <AppSpacer verticalSpace="xlg" />
+            <ProfileCompleteCard
+              avatarUrl={`${user?.imageUrl}`}
+              userName={`${user?.firstName}`}
+              percentCompeted={profileComplete}
+            />
+          </>
         )}
+        <AppSpacer verticalSpace="xlg" />
+        <Dashboard />
       </SignedIn>
       <SignedOut>
         <SignUp />

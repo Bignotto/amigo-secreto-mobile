@@ -6,16 +6,22 @@ import styled from "styled-components/native";
 interface ButtonProps extends RectButtonProps {
   color?: string;
   children: ReactNode;
+  size?: "lg" | "md" | "sm";
 }
 
+export const ButtonWrapper = styled.View`
+  overflow: hidden;
+  border-radius: 8px;
+`;
+
 export const ButtonContainer = styled(RectButton)<ButtonProps>`
-  width: 100%;
   align-items: center;
   justify-content: center;
 
   background-color: ${({ theme, color }) =>
     color ? color : theme.colors.primary};
-  height: 46px;
+  height: ${({ theme, size = "md" }) =>
+    size === "lg" ? 54 : size === "md" ? 44 : 36}px;
 `;
 
 export const ButtonText = styled.Text`
