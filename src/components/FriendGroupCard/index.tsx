@@ -1,5 +1,4 @@
 import { useUser } from "@clerk/clerk-expo";
-import AppAvatar from "@components/AppAvatar";
 import AppIconButton from "@components/AppIconButton";
 import AppText from "@components/AppText";
 import { FontAwesome5 } from "@expo/vector-icons";
@@ -14,11 +13,13 @@ type FriendGroupCardProps = {
   groupId: number;
   groupName: string;
   friendsCount: number;
+  isDrawn: boolean;
 };
 export default function FriendGroupCard({
   groupId,
   groupName,
   friendsCount = 1,
+  isDrawn = false,
 }: FriendGroupCardProps) {
   const { user } = useUser();
   const theme = useTheme();
@@ -28,7 +29,19 @@ export default function FriendGroupCard({
   return (
     <GroupWrapper>
       <GroupLeft>
-        <AppAvatar imagePath={`${user?.imageUrl}`} size={40} />
+        {isDrawn ? (
+          <FontAwesome5
+            name="check-circle"
+            size={36}
+            color={theme.colors.white}
+          />
+        ) : (
+          <FontAwesome5
+            name="question-circle"
+            size={36}
+            color={theme.colors.white}
+          />
+        )}
       </GroupLeft>
       <GroupMiddle>
         <AppText bold size="lg" color={theme.colors.white}>

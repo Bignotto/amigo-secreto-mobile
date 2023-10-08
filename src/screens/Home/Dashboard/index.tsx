@@ -75,6 +75,7 @@ export default function Dashboard() {
                   friendsCount={group.friends_count}
                   key={group.group_id}
                   groupId={group.group_id}
+                  isDrawn={group.drawn}
                 />
               ))}
           </GroupList>

@@ -29,7 +29,7 @@ export default function CreateFriendGroup() {
   const [partyDate, setPartyDate] = useState(new Date());
   const [partyTime, setPartyTime] = useState("");
   const [partyLocation, setPartyLocation] = useState("");
-  const [giftPrice, setGiftPrice] = useState("0");
+  const [giftPrice, setGiftPrice] = useState("");
   const [groupPassword, setGroupPassword] = useState("");
 
   const onChange = (
@@ -46,15 +46,16 @@ export default function CreateFriendGroup() {
   };
 
   async function handleSaveNewGroup() {
-    console.log({
-      title,
-      average_gift_price: +giftPrice,
-      group_owner_id: userId,
-      group_password: groupPassword,
-      party_date: partyDate,
-      party_location: partyLocation,
-      party_time: partyTime,
-    });
+    if (
+      title.length === 0 ||
+      partyTime.length === 0 ||
+      partyLocation.length === 0 ||
+      giftPrice.length === 0 ||
+      groupPassword.length === 0
+    ) {
+      console.log({ message: "algum campo em branco!" });
+      return;
+    }
     try {
       const { data, error } = await supabase
         .from("friends_groups")
