@@ -18,7 +18,7 @@ type FriendGroupCardProps = {
 export default function FriendGroupCard({
   groupId,
   groupName,
-  friendsCount,
+  friendsCount = 1,
 }: FriendGroupCardProps) {
   const { user } = useUser();
   const theme = useTheme();
