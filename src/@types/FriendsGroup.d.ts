@@ -6,7 +6,8 @@ export type FriendsGroup = {
   drawn: boolean;
   group_owner_id: string;
   id: number;
-  party_date: date;
+  party_date: Date;
+  party_time: string;
   party_location: string;
   title: string;
   updated_at: Date;

@@ -36,9 +36,8 @@ export default function CreateFriendGroup() {
     event: DateTimePickerEvent,
     selectedDate: Date | undefined
   ) => {
-    const currentDate = selectedDate;
+    setPartyDate(selectedDate!);
     setShow(false);
-    setPartyDate(currentDate!);
   };
 
   const showDatepicker = () => {
