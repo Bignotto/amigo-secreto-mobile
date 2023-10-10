@@ -18,3 +18,28 @@ export const IconWrapper = styled.View`
 `;
 
 export const InfoWrapper = styled.View``;
+
+export const FriendsListWrapper = styled.View``;
+
+export const FriendCard = styled.View`
+  background-color: ${({ theme }) => theme.colors.shape_light};
+  border-radius: 8px;
+  flex-direction: row;
+
+  align-items: center;
+
+  padding-left: 12px;
+  padding-right: 12px;
+  padding-top: 4px;
+  padding-bottom: 4px;
+`;
+
+export const AvatarWrapper = styled.View``;
+
+export const NameWrapper = styled.View`
+  flex: 1;
+  flex-direction: row;
+  margin-left: 12px;
+`;
+
+export const ControlWrapper = styled.View``;
