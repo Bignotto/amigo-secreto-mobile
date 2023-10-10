@@ -26,7 +26,9 @@ export default function ProfileCompleteCard({
 
   return (
     <Container>
-      <AppText bold>Complete seu perfil</AppText>
+      <AppText bold size="lg">
+        Complete seu perfil
+      </AppText>
       <ProfileInfoContainer>
         <AvatarImage
           source={{
@@ -34,7 +36,9 @@ export default function ProfileCompleteCard({
           }}
         />
         <ProfileTextContainer>
-          <AppText bold>Seu perfil está incompleto.</AppText>
+          <AppText bold>
+            {userName} seu perfil está {percentCompeted}% completo.
+          </AppText>
           <AppText>
             Complete as informações para seus amigos saberem mais de você, assim
             você pode ganhar presentes melhores.

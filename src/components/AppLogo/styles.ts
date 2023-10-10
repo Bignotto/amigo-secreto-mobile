@@ -36,5 +36,7 @@ export const AppLogoTextLG = styled.Text<AppTextColorProp>`
         return "#FFFFFF";
     }
   }};
-  font-size: ${RFValue(44)}px;
+  font-size: ${RFValue(80)}px;
+  line-height: 95px;
+  padding-top: 30px;
 `;

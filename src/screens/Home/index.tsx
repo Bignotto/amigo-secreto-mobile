@@ -1,4 +1,4 @@
-import { useAuth, useUser } from "@clerk/clerk-expo";
+import { SignedIn, SignedOut, useAuth, useUser } from "@clerk/clerk-expo";
 import AppScreenContainer from "@components/AppScreenContainer";
 import AppSpacer from "@components/AppSpacer";
 import Header from "@components/Header";
@@ -9,10 +9,12 @@ import { StackParamList } from "@routes/Navigation.types";
 import supabase from "@services/supabase";
 import { useCallback, useEffect, useState } from "react";
 import { UserProfile } from "src/@types/UserProfile";
+import Dashboard from "./Dashboard";
+import SignUp from "./SignUp";
 
 export default function Home() {
   const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
-  const { isSignedIn, isLoaded, signOut, userId } = useAuth();
+  const { isSignedIn, userId } = useAuth();
   const { user } = useUser();
 
   const [profileComplete, setProfileComplete] = useState(0);
@@ -25,9 +27,11 @@ export default function Home() {
         .select()
         .eq("email", user?.primaryEmailAddress?.emailAddress);
       if (error) {
-        console.log({ error });
+        console.log({ error, key: error.details });
         return;
       }
+
+      setUserProfile(data![0]);
 
       if (data?.length === 0 && isSignedIn) {
         let { data, error } = await supabase.from("users").insert([
@@ -37,19 +41,17 @@ export default function Home() {
             name: user?.fullName,
           },
         ]);
+        setProfileComplete(0);
         setUserProfile({
           id: userId,
           email: `${user?.primaryEmailAddress?.emailAddress}`,
           name: `${user?.fullName}`,
         });
-        setProfileComplete(0);
-
         if (error) console.log({ error });
         return;
       }
 
-      setUserProfile(data![0]);
-
+      //TODO: move this to profile card component
       let profilePoints = 0;
       const profile: UserProfile = data![0];
       if (profile.clothesSize) profilePoints += 25;
@@ -62,7 +64,9 @@ export default function Home() {
   }
 
   useEffect(() => {
-    if (isSignedIn) loadProfile();
+    if (isSignedIn) {
+      loadProfile();
+    }
   }, [isSignedIn]);
 
   useFocusEffect(
@@ -73,15 +77,24 @@ export default function Home() {
 
   return (
     <AppScreenContainer>
-      <Header />
-      <AppSpacer verticalSpace="xlg" />
-      {profileComplete < 100 && (
-        <ProfileCompleteCard
-          avatarUrl={`${user?.imageUrl}`}
-          userName={`${user?.fullName}`}
-          percentCompeted={profileComplete}
-        />
-      )}
+      <SignedIn>
+        <Header />
+        {profileComplete < 100 && (
+          <>
+            <AppSpacer verticalSpace="xlg" />
+            <ProfileCompleteCard
+              avatarUrl={`${user?.imageUrl}`}
+              userName={`${user?.firstName}`}
+              percentCompeted={profileComplete}
+            />
+          </>
+        )}
+        <AppSpacer verticalSpace="xlg" />
+        <Dashboard />
+      </SignedIn>
+      <SignedOut>
+        <SignUp />
+      </SignedOut>
     </AppScreenContainer>
   );
 }
