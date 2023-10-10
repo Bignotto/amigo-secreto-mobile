@@ -8,4 +8,5 @@ export type StackParamList = {
         groupId: number;
       }
     | undefined;
+  SearchGroup: {} | undefined;
 };

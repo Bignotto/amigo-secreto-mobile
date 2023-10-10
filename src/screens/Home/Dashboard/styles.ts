@@ -11,3 +11,8 @@ export const TopWrapper = styled.View`
 `;
 
 export const GroupList = styled.ScrollView``;
+
+export const BottomContainer = styled.View`
+  padding-top: 12px;
+  padding-bottom: 24px;
+`;
