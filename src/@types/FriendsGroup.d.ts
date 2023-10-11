@@ -11,4 +11,5 @@ export type FriendsGroup = {
   party_location: string;
   title: string;
   updated_at: Date;
+  group_password: string;
 };
