@@ -27,6 +27,7 @@ import { GroupFriendsList } from "src/@types/GroupFriendsList";
 import { useTheme } from "styled-components";
 import {
   AvatarWrapper,
+  BottomWrapper,
   ControlWrapper,
   FriendCard,
   FriendsListWrapper,
@@ -132,6 +133,48 @@ export default function FriendGroupDetails() {
     }
   }
 
+  async function handleLeaveGroup() {
+    try {
+      const { data, error } = await supabase
+        .from("user_friends_group")
+        .delete()
+        .eq("id", hasUser?.join_code);
+      if (error) {
+        console.log({ error });
+        return;
+      }
+
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [
+            {
+              name: "Home",
+            },
+          ],
+        })
+      );
+    } catch (error) {
+      console.log({ error });
+    }
+  }
+
+  async function confirmGroupLeave() {
+    return Alert.alert(
+      `Sair de ${group?.title}`,
+      `Tem certeza que quer sair do grupo?`,
+      [
+        {
+          text: "Sim",
+          onPress: handleLeaveGroup,
+        },
+        {
+          text: "Não",
+        },
+      ]
+    );
+  }
+
   const hasUser = userList.find((user) => user.user_id === userId);
 
   useEffect(() => {
@@ -230,41 +273,51 @@ export default function FriendGroupDetails() {
           />
         </>
       ) : (
-        <FriendsListWrapper>
-          {userList.length > 0 &&
-            userList.map((user) => (
-              <View key={user.user_id}>
-                <FriendCard>
-                  <AvatarWrapper>
-                    <AppAvatar imagePath={user.image_url} size={24} />
-                  </AvatarWrapper>
-                  <NameWrapper>
-                    <AppText>{user.user_name}</AppText>
-                    <AppSpacer horizontalSpace="sm" />
-                    {group?.group_owner_id === user.user_id && (
-                      <MaterialCommunityIcons
-                        name="shield-crown"
-                        size={20}
-                        color="yellow"
-                      />
-                    )}
-                  </NameWrapper>
-                  <ControlWrapper>
-                    {userId === group?.group_owner_id && (
-                      <AppIconButton>
-                        <FontAwesome5
-                          name="times-circle"
-                          size={24}
-                          color={theme.colors.negative}
+        <>
+          <FriendsListWrapper>
+            {userList.length > 0 &&
+              userList.map((user) => (
+                <View key={user.user_id}>
+                  <FriendCard>
+                    <AvatarWrapper>
+                      <AppAvatar imagePath={user.image_url} size={24} />
+                    </AvatarWrapper>
+                    <NameWrapper>
+                      <AppText>{user.user_name}</AppText>
+                      <AppSpacer horizontalSpace="sm" />
+                      {group?.group_owner_id === user.user_id && (
+                        <MaterialCommunityIcons
+                          name="shield-crown"
+                          size={20}
+                          color="yellow"
                         />
-                      </AppIconButton>
-                    )}
-                  </ControlWrapper>
-                </FriendCard>
-                <AppSpacer verticalSpace="sm" />
-              </View>
-            ))}
-        </FriendsListWrapper>
+                      )}
+                    </NameWrapper>
+                    <ControlWrapper>
+                      {userId === group?.group_owner_id && (
+                        <AppIconButton>
+                          <FontAwesome5
+                            name="times-circle"
+                            size={24}
+                            color={theme.colors.negative}
+                          />
+                        </AppIconButton>
+                      )}
+                    </ControlWrapper>
+                  </FriendCard>
+                  <AppSpacer verticalSpace="sm" />
+                </View>
+              ))}
+          </FriendsListWrapper>
+          <AppSpacer />
+          <BottomWrapper>
+            <AppButton
+              title="Sair do grupo"
+              variant="negative"
+              onPress={confirmGroupLeave}
+            />
+          </BottomWrapper>
+        </>
       )}
     </AppScreenContainer>
   );

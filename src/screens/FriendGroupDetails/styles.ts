@@ -19,7 +19,9 @@ export const IconWrapper = styled.View`
 
 export const InfoWrapper = styled.View``;
 
-export const FriendsListWrapper = styled.View``;
+export const FriendsListWrapper = styled.View`
+  flex: 1;
+`;
 
 export const FriendCard = styled.View`
   background-color: ${({ theme }) => theme.colors.shape_light};
@@ -43,3 +45,9 @@ export const NameWrapper = styled.View`
 `;
 
 export const ControlWrapper = styled.View``;
+
+export const BottomWrapper = styled.View`
+  background-color: ${({ theme }) => theme.colors.shape_light};
+  padding-bottom: 16px;
+  padding-top: 20px;
+`;
