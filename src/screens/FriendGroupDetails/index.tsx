@@ -175,6 +175,38 @@ export default function FriendGroupDetails() {
     );
   }
 
+  async function handleExcludeUser(joinCode: number) {
+    try {
+      const { data, error } = await supabase
+        .from("user_friends_group")
+        .delete()
+        .eq("id", joinCode);
+      if (error) {
+        console.log({ error });
+        return;
+      }
+    } catch (error) {
+      console.log({ error });
+    }
+    await loadGroupFriends();
+  }
+
+  async function confirmExcludeUser(userName: string, joinCode: number) {
+    return Alert.alert(
+      `Remover ${userName}`,
+      `Tem certeza que quer remover o usuário do grupo?`,
+      [
+        {
+          text: "Sim",
+          onPress: () => handleExcludeUser(joinCode),
+        },
+        {
+          text: "Não",
+        },
+      ]
+    );
+  }
+
   const hasUser = userList.find((user) => user.user_id === userId);
 
   useEffect(() => {
@@ -294,15 +326,20 @@ export default function FriendGroupDetails() {
                       )}
                     </NameWrapper>
                     <ControlWrapper>
-                      {userId === group?.group_owner_id && (
-                        <AppIconButton>
-                          <FontAwesome5
-                            name="times-circle"
-                            size={24}
-                            color={theme.colors.negative}
-                          />
-                        </AppIconButton>
-                      )}
+                      {userId === group?.group_owner_id &&
+                        userId !== user.user_id && (
+                          <AppIconButton
+                            onPress={() =>
+                              confirmExcludeUser(user.user_name, user.join_code)
+                            }
+                          >
+                            <FontAwesome5
+                              name="times-circle"
+                              size={24}
+                              color={theme.colors.negative}
+                            />
+                          </AppIconButton>
+                        )}
                     </ControlWrapper>
                   </FriendCard>
                   <AppSpacer verticalSpace="sm" />
