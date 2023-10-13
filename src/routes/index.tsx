@@ -5,6 +5,7 @@ import FriendGroupDetails from "@screens/FriendGroupDetails";
 import Home from "@screens/Home";
 import OAuthSignIn from "@screens/OAuthSignIn";
 import Profile from "@screens/Profile";
+import SearchGroup from "@screens/SearchGroup";
 
 const Stack = createNativeStackNavigator();
 
@@ -25,6 +26,7 @@ export default function Routes() {
           name="FriendGroupDetails"
           component={FriendGroupDetails}
         />
+        <Stack.Screen name="SearchGroup" component={SearchGroup} />
       </Stack.Navigator>
     </NavigationContainer>
   );

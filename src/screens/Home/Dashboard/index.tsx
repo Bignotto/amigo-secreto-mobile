@@ -11,7 +11,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { ActivityIndicator } from "react-native";
 import { UserGroups } from "src/@types/UserGroups";
 import { useTheme } from "styled-components";
-import { Container, GroupList, TopWrapper } from "./styles";
+import { BottomContainer, Container, GroupList, TopWrapper } from "./styles";
 
 export default function Dashboard() {
   const { userId } = useAuth();
@@ -79,6 +79,12 @@ export default function Dashboard() {
                 />
               ))}
           </GroupList>
+          <BottomContainer>
+            <AppButton
+              title="Encontrar um grupo"
+              onPress={() => navigation.navigate("SearchGroup")}
+            />
+          </BottomContainer>
         </>
       )}
     </Container>
