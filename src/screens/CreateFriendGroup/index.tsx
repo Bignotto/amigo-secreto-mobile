@@ -150,6 +150,7 @@ export default function CreateFriendGroup() {
           <AppInput
             label="Qual o valor dos presentes?"
             placeholder="200"
+            keyboardType="numeric"
             value={giftPrice}
             onChangeText={(text) => setGiftPrice(text)}
           />

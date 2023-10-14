@@ -39,6 +39,7 @@ export default function Home() {
             id: userId,
             email: user?.primaryEmailAddress?.emailAddress,
             name: user?.fullName,
+            image_url: user?.imageUrl,
           },
         ]);
         setProfileComplete(0);
@@ -46,6 +47,7 @@ export default function Home() {
           id: userId,
           email: `${user?.primaryEmailAddress?.emailAddress}`,
           name: `${user?.fullName}`,
+          image_url: `${user?.imageUrl}`,
         });
         if (error) console.log({ error });
         return;
