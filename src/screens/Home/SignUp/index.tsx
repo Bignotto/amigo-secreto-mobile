@@ -1,6 +1,7 @@
 import { useOAuth } from "@clerk/clerk-expo";
 import AppButton from "@components/AppButton";
 import AppLogo from "@components/AppLogo";
+import AppScreenContainer from "@components/AppScreenContainer";
 import { useWarmUpBrowser } from "@hooks/warmUpBrowser";
 import React, { useState } from "react";
 import { ActivityIndicator } from "react-native";
@@ -29,19 +30,21 @@ export default function SignUp() {
   }
 
   return (
-    <Container>
-      {isLoading ? (
-        <ActivityIndicator />
-      ) : (
-        <>
-          <AppLogo size="lg" color="primary" />
-          <AppButton
-            title="Entre com Google"
-            onPress={appSignIn}
-            isLoading={isLoading}
-          />
-        </>
-      )}
-    </Container>
+    <AppScreenContainer>
+      <Container>
+        {isLoading ? (
+          <ActivityIndicator />
+        ) : (
+          <>
+            <AppLogo size="lg" color="primary" />
+            <AppButton
+              title="Entre com Google"
+              onPress={appSignIn}
+              isLoading={isLoading}
+            />
+          </>
+        )}
+      </Container>
+    </AppScreenContainer>
   );
 }

@@ -1,4 +1,4 @@
-import { SignedIn, SignedOut, useAuth, useUser } from "@clerk/clerk-expo";
+import { useAuth, useUser } from "@clerk/clerk-expo";
 import AppScreenContainer from "@components/AppScreenContainer";
 import AppSpacer from "@components/AppSpacer";
 import Header from "@components/Header";
@@ -10,7 +10,6 @@ import supabase from "@services/supabase";
 import { useCallback, useEffect, useState } from "react";
 import { UserProfile } from "src/@types/UserProfile";
 import Dashboard from "./Dashboard";
-import SignUp from "./SignUp";
 
 export default function Home() {
   const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
@@ -79,24 +78,19 @@ export default function Home() {
 
   return (
     <AppScreenContainer>
-      <SignedIn>
-        <Header />
-        {profileComplete < 100 && (
-          <>
-            <AppSpacer verticalSpace="xlg" />
-            <ProfileCompleteCard
-              avatarUrl={`${user?.imageUrl}`}
-              userName={`${user?.firstName}`}
-              percentCompeted={profileComplete}
-            />
-          </>
-        )}
-        <AppSpacer verticalSpace="xlg" />
-        <Dashboard />
-      </SignedIn>
-      <SignedOut>
-        <SignUp />
-      </SignedOut>
+      <Header />
+      {profileComplete < 100 && (
+        <>
+          <AppSpacer verticalSpace="xlg" />
+          <ProfileCompleteCard
+            avatarUrl={`${user?.imageUrl}`}
+            userName={`${user?.firstName}`}
+            percentCompeted={profileComplete}
+          />
+        </>
+      )}
+      <AppSpacer verticalSpace="xlg" />
+      <Dashboard />
     </AppScreenContainer>
   );
 }
