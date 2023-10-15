@@ -348,11 +348,15 @@ export default function FriendGroupDetails() {
           </FriendsListWrapper>
           <AppSpacer />
           <BottomWrapper>
-            <AppButton
-              title="Sair do grupo"
-              variant="negative"
-              onPress={confirmGroupLeave}
-            />
+            {userId === group?.group_owner_id ? (
+              <AppButton title="Apagar grupo" variant="negative" />
+            ) : (
+              <AppButton
+                title="Sair do grupo"
+                variant="negative"
+                onPress={confirmGroupLeave}
+              />
+            )}
           </BottomWrapper>
         </>
       )}

@@ -4,10 +4,10 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import CreateFriendGroup from "@screens/CreateFriendGroup";
 import FriendGroupDetails from "@screens/FriendGroupDetails";
 import Home from "@screens/Home";
-import SignUp from "@screens/Home/SignUp";
 import OAuthSignIn from "@screens/OAuthSignIn";
 import Profile from "@screens/Profile";
 import SearchGroup from "@screens/SearchGroup";
+import SignUp from "@screens/SignUp";
 
 const Stack = createNativeStackNavigator();
 
