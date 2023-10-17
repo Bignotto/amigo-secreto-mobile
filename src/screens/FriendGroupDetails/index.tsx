@@ -207,6 +207,73 @@ export default function FriendGroupDetails() {
     );
   }
 
+  async function confirmDeleteGroup() {
+    return Alert.alert(
+      `Apagar grupo ${group?.title}`,
+      `Tem certeza que quer apagar o grupo?`,
+      [
+        {
+          text: "Sim",
+          onPress: handleDeleteGroup,
+        },
+        {
+          text: "Não",
+        },
+      ]
+    );
+  }
+
+  async function handleDeleteGroup() {
+    try {
+      const { data, error } = await supabase
+        .from("user_friends_group")
+        .delete()
+        .eq("friends_group_id", groupId);
+      if (error) {
+        console.log({ error });
+        return;
+      }
+
+      const { data: data_group, error: error_group } = await supabase
+        .from("friends_groups")
+        .delete()
+        .eq("id", groupId);
+      if (error_group) {
+        console.log({ error_group });
+        return;
+      }
+
+      navigation.goBack();
+    } catch (error) {
+      console.log({ error });
+    }
+  }
+
+  function drawGroup(friends: string[]) {
+    for (let i = friends.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [friends[i], friends[j]] = [friends[j], friends[i]];
+    }
+    return friends;
+  }
+
+  async function handleDrawGroup() {
+    const friendsIds = userList.map((u) => u.user_id);
+    console.log({ friendsIds });
+    const shuffleFriends = drawGroup(friendsIds);
+
+    // const validated = friendsIds.find((f, i) => f === shuffleFriends[i]);
+
+    console.log("------------------------");
+    console.log({ shuffleFriends });
+    for (let i = friendsIds.length - 1; i > 0; i--) {
+      console.log({
+        sorteio: `user ${friendsIds[i]} whith ${shuffleFriends[i]}`,
+      });
+    }
+    // console.log({ validated: validated });
+  }
+
   const hasUser = userList.find((user) => user.user_id === userId);
 
   useEffect(() => {
@@ -286,6 +353,14 @@ export default function FriendGroupDetails() {
         </GroupInfoWrapper>
       </GroupDetailsWrapper>
       <AppSpacer verticalSpace="xlg" />
+      {group?.group_owner_id === userId && !group?.drawn && (
+        <AppButton
+          title="Sortear grupo!"
+          variant="positive"
+          onPress={handleDrawGroup}
+        />
+      )}
+      <AppSpacer />
       {!hasUser ? (
         <>
           <AppText>
@@ -347,17 +422,23 @@ export default function FriendGroupDetails() {
               ))}
           </FriendsListWrapper>
           <AppSpacer />
-          <BottomWrapper>
-            {userId === group?.group_owner_id ? (
-              <AppButton title="Apagar grupo" variant="negative" />
-            ) : (
-              <AppButton
-                title="Sair do grupo"
-                variant="negative"
-                onPress={confirmGroupLeave}
-              />
-            )}
-          </BottomWrapper>
+          {!group?.drawn && (
+            <BottomWrapper>
+              {userId === group?.group_owner_id ? (
+                <AppButton
+                  title="Apagar grupo"
+                  variant="negative"
+                  onPress={confirmDeleteGroup}
+                />
+              ) : (
+                <AppButton
+                  title="Sair do grupo"
+                  variant="negative"
+                  onPress={confirmGroupLeave}
+                />
+              )}
+            </BottomWrapper>
+          )}
         </>
       )}
     </AppScreenContainer>
