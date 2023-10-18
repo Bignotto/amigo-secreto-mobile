@@ -250,28 +250,55 @@ export default function FriendGroupDetails() {
   }
 
   function drawGroup(friends: string[]) {
-    for (let i = friends.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [friends[i], friends[j]] = [friends[j], friends[i]];
+    const toShuffle = [...friends];
+
+    let shuffleCount = 10;
+    while (shuffleCount !== 0) {
+      for (let i = toShuffle.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [toShuffle[i], toShuffle[j]] = [toShuffle[j], toShuffle[i]];
+      }
+
+      for (let i = 0; i < toShuffle.length; i++) {
+        if (friends[i] === toShuffle[i]) {
+          shuffleCount--;
+          break;
+        }
+        break;
+      }
     }
-    return friends;
+
+    if (shuffleCount === 0) {
+      const move = Math.floor(Math.random() * (friends.length - 2 + 1) + 1);
+      console.log({ shuffleCount, move });
+      return moveItemsAhead(friends, move);
+    }
+
+    return toShuffle;
+  }
+
+  function moveItemsAhead(array: string[], positions: number): string[] {
+    const length = array.length;
+    const startIndex = length - (positions % length);
+    const movedItems = array
+      .slice(startIndex)
+      .concat(array.slice(0, startIndex));
+
+    return movedItems;
   }
 
   async function handleDrawGroup() {
     const friendsIds = userList.map((u) => u.user_id);
-    console.log({ friendsIds });
     const shuffleFriends = drawGroup(friendsIds);
 
-    // const validated = friendsIds.find((f, i) => f === shuffleFriends[i]);
-
-    console.log("------------------------");
-    console.log({ shuffleFriends });
-    for (let i = friendsIds.length - 1; i > 0; i--) {
+    //NEXT: save draw results to database
+    for (let i = 0; i < friendsIds.length; i++) {
       console.log({
         sorteio: `user ${friendsIds[i]} whith ${shuffleFriends[i]}`,
+        pode: friendsIds[i] === shuffleFriends[i] ? "nao pode" : "ok",
       });
     }
-    // console.log({ validated: validated });
+    console.log("----------");
   }
 
   const hasUser = userList.find((user) => user.user_id === userId);
