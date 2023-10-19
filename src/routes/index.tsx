@@ -2,6 +2,7 @@ import { SignedIn, SignedOut } from "@clerk/clerk-expo";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import CreateFriendGroup from "@screens/CreateFriendGroup";
+import DrawFriendDetails from "@screens/DrawFriendDetails";
 import FriendGroupDetails from "@screens/FriendGroupDetails";
 import Home from "@screens/Home";
 import OAuthSignIn from "@screens/OAuthSignIn";
@@ -42,6 +43,10 @@ export default function Routes() {
             component={FriendGroupDetails}
           />
           <Stack.Screen name="SearchGroup" component={SearchGroup} />
+          <Stack.Screen
+            name="DrawFriendDetails"
+            component={DrawFriendDetails}
+          />
         </Stack.Navigator>
       </SignedIn>
     </NavigationContainer>

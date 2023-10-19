@@ -18,6 +18,8 @@ import {
   useNavigation,
   useRoute,
 } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { StackParamList } from "@routes/Navigation.types";
 import supabase from "@services/supabase";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
@@ -47,7 +49,7 @@ export default function FriendGroupDetails() {
   const { groupId } = route.params as FriendGroupDetailsParams;
   const theme = useTheme();
   const { userId } = useAuth();
-  const navigation = useNavigation();
+  const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
 
   const [isLoading, setIsLoading] = useState(true);
   const [group, setGroup] = useState<FriendsGroup>();
@@ -427,7 +429,17 @@ export default function FriendGroupDetails() {
           onPress={handleDrawGroup}
         />
       )}
-      <AppSpacer />
+      {group?.drawn && (
+        <AppButton
+          title="Meu amigo secreto"
+          onPress={() =>
+            navigation.navigate("DrawFriendDetails", {
+              joinId: hasUser?.join_code ?? 0,
+            })
+          }
+        />
+      )}
+      <AppSpacer verticalSpace="xlg" />
       {!hasUser ? (
         <>
           <AppText>
