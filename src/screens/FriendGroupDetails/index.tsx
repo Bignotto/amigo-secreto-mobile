@@ -264,13 +264,11 @@ export default function FriendGroupDetails() {
           shuffleCount--;
           break;
         }
-        break;
       }
     }
 
     if (shuffleCount === 0) {
       const move = Math.floor(Math.random() * (friends.length - 2 + 1) + 1);
-      console.log({ shuffleCount, move });
       return moveItemsAhead(friends, move);
     }
 
@@ -288,17 +286,59 @@ export default function FriendGroupDetails() {
   }
 
   async function handleDrawGroup() {
+    setIsLoading(true);
     const friendsIds = userList.map((u) => u.user_id);
     const shuffleFriends = drawGroup(friendsIds);
 
-    //NEXT: save draw results to database
     for (let i = 0; i < friendsIds.length; i++) {
-      console.log({
-        sorteio: `user ${friendsIds[i]} whith ${shuffleFriends[i]}`,
-        pode: friendsIds[i] === shuffleFriends[i] ? "nao pode" : "ok",
-      });
+      if (friendsIds[i] === shuffleFriends[i]) {
+        console.log("algo deu errado");
+        return;
+      }
     }
-    console.log("----------");
+
+    const upsertData: {
+      id: number;
+      user_id: string;
+      friends_group_id: number;
+      drawnFriendId: string;
+    }[] = [];
+    userList.map((u, i) => {
+      upsertData.push({
+        id: u.join_code,
+        user_id: u.user_id,
+        friends_group_id: groupId,
+        drawnFriendId: shuffleFriends[i],
+      });
+    });
+
+    try {
+      const { data: upsert, error: error_upsert } = await supabase
+        .from("user_friends_group")
+        .upsert(upsertData);
+      if (error_upsert) {
+        console.log({ error_upsert });
+        return;
+      }
+
+      const { data, error } = await supabase
+        .from("friends_groups")
+        .update({ drawn: true, draw_date: new Date() })
+        .eq("id", groupId);
+
+      if (error) {
+        console.log({ error });
+        return;
+      }
+
+      await loadGroupInfo();
+      await loadGroupFriends();
+    } catch (error) {
+      console.log({ error });
+      return;
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   const hasUser = userList.find((user) => user.user_id === userId);
