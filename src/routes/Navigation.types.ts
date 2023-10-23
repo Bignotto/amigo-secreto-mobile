@@ -9,4 +9,9 @@ export type StackParamList = {
       }
     | undefined;
   SearchGroup: {} | undefined;
+  DrawFriendDetails:
+    | {
+        joinId: number;
+      }
+    | undefined;
 };

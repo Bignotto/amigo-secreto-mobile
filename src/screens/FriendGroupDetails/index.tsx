@@ -18,6 +18,8 @@ import {
   useNavigation,
   useRoute,
 } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { StackParamList } from "@routes/Navigation.types";
 import supabase from "@services/supabase";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
@@ -47,7 +49,7 @@ export default function FriendGroupDetails() {
   const { groupId } = route.params as FriendGroupDetailsParams;
   const theme = useTheme();
   const { userId } = useAuth();
-  const navigation = useNavigation();
+  const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
 
   const [isLoading, setIsLoading] = useState(true);
   const [group, setGroup] = useState<FriendsGroup>();
@@ -207,6 +209,140 @@ export default function FriendGroupDetails() {
     );
   }
 
+  async function confirmDeleteGroup() {
+    return Alert.alert(
+      `Apagar grupo ${group?.title}`,
+      `Tem certeza que quer apagar o grupo?`,
+      [
+        {
+          text: "Sim",
+          onPress: handleDeleteGroup,
+        },
+        {
+          text: "Não",
+        },
+      ]
+    );
+  }
+
+  async function handleDeleteGroup() {
+    try {
+      const { data, error } = await supabase
+        .from("user_friends_group")
+        .delete()
+        .eq("friends_group_id", groupId);
+      if (error) {
+        console.log({ error });
+        return;
+      }
+
+      const { data: data_group, error: error_group } = await supabase
+        .from("friends_groups")
+        .delete()
+        .eq("id", groupId);
+      if (error_group) {
+        console.log({ error_group });
+        return;
+      }
+
+      navigation.goBack();
+    } catch (error) {
+      console.log({ error });
+    }
+  }
+
+  function drawGroup(friends: string[]) {
+    const toShuffle = [...friends];
+
+    let shuffleCount = 10;
+    while (shuffleCount !== 0) {
+      for (let i = toShuffle.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [toShuffle[i], toShuffle[j]] = [toShuffle[j], toShuffle[i]];
+      }
+
+      for (let i = 0; i < toShuffle.length; i++) {
+        if (friends[i] === toShuffle[i]) {
+          shuffleCount--;
+          break;
+        }
+      }
+    }
+
+    if (shuffleCount === 0) {
+      const move = Math.floor(Math.random() * (friends.length - 2 + 1) + 1);
+      return moveItemsAhead(friends, move);
+    }
+
+    return toShuffle;
+  }
+
+  function moveItemsAhead(array: string[], positions: number): string[] {
+    const length = array.length;
+    const startIndex = length - (positions % length);
+    const movedItems = array
+      .slice(startIndex)
+      .concat(array.slice(0, startIndex));
+
+    return movedItems;
+  }
+
+  async function handleDrawGroup() {
+    setIsLoading(true);
+    const friendsIds = userList.map((u) => u.user_id);
+    const shuffleFriends = drawGroup(friendsIds);
+
+    for (let i = 0; i < friendsIds.length; i++) {
+      if (friendsIds[i] === shuffleFriends[i]) {
+        console.log("algo deu errado");
+        return;
+      }
+    }
+
+    const upsertData: {
+      id: number;
+      user_id: string;
+      friends_group_id: number;
+      drawnFriendId: string;
+    }[] = [];
+    userList.map((u, i) => {
+      upsertData.push({
+        id: u.join_code,
+        user_id: u.user_id,
+        friends_group_id: groupId,
+        drawnFriendId: shuffleFriends[i],
+      });
+    });
+
+    try {
+      const { data: upsert, error: error_upsert } = await supabase
+        .from("user_friends_group")
+        .upsert(upsertData);
+      if (error_upsert) {
+        console.log({ error_upsert });
+        return;
+      }
+
+      const { data, error } = await supabase
+        .from("friends_groups")
+        .update({ drawn: true, draw_date: new Date() })
+        .eq("id", groupId);
+
+      if (error) {
+        console.log({ error });
+        return;
+      }
+
+      await loadGroupInfo();
+      await loadGroupFriends();
+    } catch (error) {
+      console.log({ error });
+      return;
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
   const hasUser = userList.find((user) => user.user_id === userId);
 
   useEffect(() => {
@@ -286,6 +422,24 @@ export default function FriendGroupDetails() {
         </GroupInfoWrapper>
       </GroupDetailsWrapper>
       <AppSpacer verticalSpace="xlg" />
+      {group?.group_owner_id === userId && !group?.drawn && (
+        <AppButton
+          title="Sortear grupo!"
+          variant="positive"
+          onPress={handleDrawGroup}
+        />
+      )}
+      {group?.drawn && (
+        <AppButton
+          title="Meu amigo secreto"
+          onPress={() =>
+            navigation.navigate("DrawFriendDetails", {
+              joinId: hasUser?.join_code ?? 0,
+            })
+          }
+        />
+      )}
+      <AppSpacer verticalSpace="xlg" />
       {!hasUser ? (
         <>
           <AppText>
@@ -347,13 +501,23 @@ export default function FriendGroupDetails() {
               ))}
           </FriendsListWrapper>
           <AppSpacer />
-          <BottomWrapper>
-            <AppButton
-              title="Sair do grupo"
-              variant="negative"
-              onPress={confirmGroupLeave}
-            />
-          </BottomWrapper>
+          {!group?.drawn && (
+            <BottomWrapper>
+              {userId === group?.group_owner_id ? (
+                <AppButton
+                  title="Apagar grupo"
+                  variant="negative"
+                  onPress={confirmDeleteGroup}
+                />
+              ) : (
+                <AppButton
+                  title="Sair do grupo"
+                  variant="negative"
+                  onPress={confirmGroupLeave}
+                />
+              )}
+            </BottomWrapper>
+          )}
         </>
       )}
     </AppScreenContainer>

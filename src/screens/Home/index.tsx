@@ -1,4 +1,4 @@
-import { SignedIn, SignedOut, useAuth, useUser } from "@clerk/clerk-expo";
+import { useAuth, useUser } from "@clerk/clerk-expo";
 import AppScreenContainer from "@components/AppScreenContainer";
 import AppSpacer from "@components/AppSpacer";
 import Header from "@components/Header";
@@ -8,19 +8,22 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { StackParamList } from "@routes/Navigation.types";
 import supabase from "@services/supabase";
 import { useCallback, useEffect, useState } from "react";
+import { ActivityIndicator } from "react-native";
 import { UserProfile } from "src/@types/UserProfile";
 import Dashboard from "./Dashboard";
-import SignUp from "./SignUp";
 
 export default function Home() {
   const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
-  const { isSignedIn, userId } = useAuth();
+  const { isSignedIn, userId, isLoaded } = useAuth();
   const { user } = useUser();
 
   const [profileComplete, setProfileComplete] = useState(0);
   const [userProfile, setUserProfile] = useState<UserProfile>();
 
+  const [isLoading, setIsLoading] = useState(true);
+
   async function loadProfile() {
+    setIsLoading(true);
     try {
       let { data, error } = await supabase
         .from("users")
@@ -39,6 +42,7 @@ export default function Home() {
             id: userId,
             email: user?.primaryEmailAddress?.emailAddress,
             name: user?.fullName,
+            image_url: user?.imageUrl,
           },
         ]);
         setProfileComplete(0);
@@ -46,6 +50,7 @@ export default function Home() {
           id: userId,
           email: `${user?.primaryEmailAddress?.emailAddress}`,
           name: `${user?.fullName}`,
+          image_url: `${user?.imageUrl}`,
         });
         if (error) console.log({ error });
         return;
@@ -60,7 +65,11 @@ export default function Home() {
       if (profile.dontLikeThings) profilePoints += 25;
 
       setProfileComplete(profilePoints);
-    } catch (error) {}
+    } catch (error) {
+      console.log({ error });
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   useEffect(() => {
@@ -77,24 +86,25 @@ export default function Home() {
 
   return (
     <AppScreenContainer>
-      <SignedIn>
-        <Header />
-        {profileComplete < 100 && (
-          <>
-            <AppSpacer verticalSpace="xlg" />
-            <ProfileCompleteCard
-              avatarUrl={`${user?.imageUrl}`}
-              userName={`${user?.firstName}`}
-              percentCompeted={profileComplete}
-            />
-          </>
-        )}
-        <AppSpacer verticalSpace="xlg" />
-        <Dashboard />
-      </SignedIn>
-      <SignedOut>
-        <SignUp />
-      </SignedOut>
+      <Header />
+      {isLoading ? (
+        <ActivityIndicator />
+      ) : (
+        <>
+          {profileComplete < 100 && (
+            <>
+              <AppSpacer verticalSpace="xlg" />
+              <ProfileCompleteCard
+                avatarUrl={`${user?.imageUrl}`}
+                userName={`${user?.firstName}`}
+                percentCompeted={profileComplete}
+              />
+            </>
+          )}
+          <AppSpacer verticalSpace="xlg" />
+          <Dashboard />
+        </>
+      )}
     </AppScreenContainer>
   );
 }

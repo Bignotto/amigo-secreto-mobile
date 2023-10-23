@@ -16,6 +16,7 @@ export default function AppButton({
   variant = "solid",
   isLoading = false,
   size = "md",
+  enabled = true,
   ...rest
 }: AppButtonProps) {
   const theme = useTheme();
@@ -35,7 +36,7 @@ export default function AppButton({
         ) : (
           <AppText
             bold
-            color={theme.colors.white}
+            color={enabled ? theme.colors.white : theme.colors.text_disabled}
             size={size}
             style={{
               paddingLeft: 16,
