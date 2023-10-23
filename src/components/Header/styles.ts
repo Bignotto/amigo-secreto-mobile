@@ -4,6 +4,7 @@ export const Container = styled.View`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+  background-color: ${({ theme }) => theme.colors.primary};
 `;
 
 export const AvatarContainer = styled.View``;
