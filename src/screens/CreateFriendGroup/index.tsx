@@ -95,8 +95,7 @@ export default function CreateFriendGroup() {
   }
 
   return (
-    <AppScreenContainer>
-      <Header />
+    <AppScreenContainer header={<Header />}>
       <ScrollView showsVerticalScrollIndicator={false}>
         <LogoWrapper>
           <AppLogo />

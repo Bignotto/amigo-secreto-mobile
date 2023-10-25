@@ -1,7 +1,9 @@
+import { StatusBar } from "expo-status-bar";
 import React, { ReactNode } from "react";
 import {
   AppScreenContainerStylesProps,
   HeaderContainer,
+  HeaderSpace,
   ScreenContainer,
 } from "./styles";
 
@@ -15,7 +17,8 @@ export default function AppScreenContainer({
 }: AppScreenContainerProps) {
   return (
     <>
-      {header && <HeaderContainer>{header}</HeaderContainer>}
+      <StatusBar style="inverted" />
+      {header ? <HeaderContainer>{header}</HeaderContainer> : <HeaderSpace />}
       <ScreenContainer>{children}</ScreenContainer>
     </>
   );

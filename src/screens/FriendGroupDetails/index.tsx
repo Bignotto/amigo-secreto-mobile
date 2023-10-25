@@ -3,7 +3,6 @@ import AppAvatar from "@components/AppAvatar";
 import AppButton from "@components/AppButton";
 import AppIconButton from "@components/AppIconButton";
 import AppInput from "@components/AppInput";
-import AppLogo from "@components/AppLogo";
 import AppScreenContainer from "@components/AppScreenContainer";
 import AppSpacer from "@components/AppSpacer";
 import AppText from "@components/AppText";
@@ -351,9 +350,7 @@ export default function FriendGroupDetails() {
   }, []);
 
   return (
-    <AppScreenContainer>
-      <Header />
-      <AppLogo />
+    <AppScreenContainer header={<Header />}>
       <AppSpacer verticalSpace="lg" />
       <GroupDetailsWrapper>
         <GroupInfoWrapper>

@@ -22,3 +22,8 @@ export const ScreenContainer = styled.View`
   padding-right: 16px;
   background-color: ${({ theme }) => theme.colors.background};
 `;
+
+export const HeaderSpace = styled.View`
+  padding-top: ${() => getStatusBarHeight() + 8}px;
+  background-color: ${({ theme }) => theme.colors.primary};
+`;

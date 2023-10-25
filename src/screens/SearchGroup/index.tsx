@@ -46,8 +46,7 @@ export default function SearchGroup() {
   }
 
   return (
-    <AppScreenContainer>
-      <Header />
+    <AppScreenContainer header={<Header />}>
       <AppSpacer verticalSpace="xlg" />
       <SearchInputContainer>
         <InputComponent

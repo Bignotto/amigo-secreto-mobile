@@ -56,8 +56,7 @@ export default function DrawFriendDetails() {
   //NEXT: finish drawn friend info card
 
   return (
-    <AppScreenContainer>
-      <Header />
+    <AppScreenContainer header={<Header />}>
       <AppSpacer />
       <AppLogo />
       <AppSpacer verticalSpace="xlg" />
