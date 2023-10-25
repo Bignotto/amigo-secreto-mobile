@@ -48,6 +48,7 @@ export default function SearchGroup() {
   return (
     <AppScreenContainer header={<Header />}>
       <AppSpacer verticalSpace="xlg" />
+      <AppText>Procure por um grupo de amigo secreto:</AppText>
       <SearchInputContainer>
         <InputComponent
           value={searchText}
