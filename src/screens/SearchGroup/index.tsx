@@ -11,6 +11,7 @@ import { StackParamList } from "@routes/Navigation.types";
 import supabase from "@services/supabase";
 import moment from "moment";
 import React, { useState } from "react";
+import { Alert } from "react-native";
 import { FriendsGroup } from "src/@types/FriendsGroup";
 import { useTheme } from "styled-components/native";
 import {
@@ -30,13 +31,24 @@ export default function SearchGroup() {
 
   const [searchText, setSearchText] = useState("");
   const [searchResults, setSearchResults] = useState<FriendsGroup[]>([]);
+  const [searched, setSearched] = useState(false);
 
   async function handleSearch() {
+    const canSearch = searchText.length >= 3;
+
+    if (!canSearch) {
+      Alert.alert("O texto de busca precisa ser maior que 3 caracteres.");
+      return;
+    }
+
+    setSearched(true);
+
     try {
       const { data, error } = await supabase
         .from("friends_groups")
         .select()
-        .ilike("title", `%${searchText}%`);
+        .ilike("title", `%${searchText}%`)
+        .eq("drawn", false);
       if (error) {
         console.log({ error });
         return;
@@ -46,21 +58,41 @@ export default function SearchGroup() {
   }
 
   return (
-    <AppScreenContainer header={<Header />}>
+    <AppScreenContainer
+      header={
+        <>
+          <Header />
+          <AppSpacer verticalSpace="xlg" />
+          <AppText size="lg" bold color={theme.colors.white}>
+            Procure por um grupo de amigo secreto:
+          </AppText>
+          <AppSpacer verticalSpace="sm" />
+          <SearchInputContainer>
+            <InputComponent
+              value={searchText}
+              onChangeText={(text) => setSearchText(text)}
+              onSubmitEditing={handleSearch}
+            />
+            <IconWrapper>
+              <IconButton onPress={handleSearch}>
+                <FontAwesome5 name="search" size={24} color="black" />
+              </IconButton>
+            </IconWrapper>
+          </SearchInputContainer>
+        </>
+      }
+    >
       <AppSpacer verticalSpace="xlg" />
-      <AppText>Procure por um grupo de amigo secreto:</AppText>
-      <SearchInputContainer>
-        <InputComponent
-          value={searchText}
-          onChangeText={(text) => setSearchText(text)}
-        />
-        <IconWrapper>
-          <IconButton onPress={handleSearch}>
-            <FontAwesome5 name="search" size={24} color="black" />
-          </IconButton>
-        </IconWrapper>
-      </SearchInputContainer>
-      <AppSpacer verticalSpace="xlg" />
+      {searched && (
+        <>
+          <AppText>
+            Encontrados {searchResults.length} grupos procurando por "
+            {searchText}
+            ".
+          </AppText>
+          <AppSpacer />
+        </>
+      )}
       <SearchResultsContainer>
         {searchResults.length > 0 &&
           searchResults.map((group) => (
