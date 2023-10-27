@@ -1,5 +1,6 @@
 import { useAuth, useUser } from "@clerk/clerk-expo";
 import AppIconButton from "@components/AppIconButton";
+import AppLogo from "@components/AppLogo";
 import AppText from "@components/AppText";
 import { FontAwesome5, MaterialCommunityIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
@@ -11,7 +12,8 @@ import {
   AvatarContainer,
   AvatarImage,
   ButtonsContainer,
-  Container,
+  HeaderContainer,
+  LogoContainer,
   MidContainer,
 } from "./styles";
 
@@ -23,38 +25,43 @@ export default function Header() {
   const theme = useTheme();
 
   return (
-    <Container>
-      <AvatarContainer>
-        <AvatarImage
-          source={{
-            uri: `${user?.imageUrl}`,
-          }}
-        />
-      </AvatarContainer>
-      <MidContainer>
-        <AppText bold color={theme.colors.text_light}>
-          Olá 👋
-        </AppText>
-        <AppText bold size="xlg" color={theme.colors.text_light}>
-          {user?.firstName}
-        </AppText>
-      </MidContainer>
-      <ButtonsContainer>
-        <AppIconButton onPress={() => navigation.navigate("Profile")}>
-          <FontAwesome5
-            name="user-edit"
-            size={28}
-            color={theme.colors.text_light}
+    <>
+      <LogoContainer>
+        <AppLogo size="md" color={theme.colors.white} />
+      </LogoContainer>
+      <HeaderContainer>
+        <AvatarContainer>
+          <AvatarImage
+            source={{
+              uri: `${user?.imageUrl}`,
+            }}
           />
-        </AppIconButton>
-        <AppIconButton onPress={() => signOut()}>
-          <MaterialCommunityIcons
-            name="logout"
-            size={32}
-            color={theme.colors.text_light}
-          />
-        </AppIconButton>
-      </ButtonsContainer>
-    </Container>
+        </AvatarContainer>
+        <MidContainer>
+          <AppText bold color={theme.colors.text_light}>
+            Olá 👋
+          </AppText>
+          <AppText bold size="xlg" color={theme.colors.text_light}>
+            {user?.firstName}
+          </AppText>
+        </MidContainer>
+        <ButtonsContainer>
+          <AppIconButton onPress={() => navigation.navigate("Profile")}>
+            <FontAwesome5
+              name="user-edit"
+              size={28}
+              color={theme.colors.text_light}
+            />
+          </AppIconButton>
+          <AppIconButton onPress={() => signOut()}>
+            <MaterialCommunityIcons
+              name="logout"
+              size={32}
+              color={theme.colors.text_light}
+            />
+          </AppIconButton>
+        </ButtonsContainer>
+      </HeaderContainer>
+    </>
   );
 }
