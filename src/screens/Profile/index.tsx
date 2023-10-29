@@ -74,7 +74,7 @@ export default function Profile() {
       ) : (
         <ScrollView showsVerticalScrollIndicator={false}>
           <TopScreenContainer>
-            <AppLogo size="sm" />
+            <AppLogo size="md" />
             <AppSpacer />
             <AppAvatar imagePath={`${user?.imageUrl}`} size={200} />
             <AppSpacer />

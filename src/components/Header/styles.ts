@@ -1,9 +1,13 @@
 import styled from "styled-components/native";
 
 export const LogoContainer = styled.View`
+  flex-direction: row;
   background-color: ${({ theme }) => theme.colors.primary};
   align-items: center;
+  justify-content: space-between;
 `;
+
+export const IconButtonWrapper = styled.View``;
 
 export const HeaderContainer = styled.View`
   flex-direction: row;

@@ -85,7 +85,7 @@ export default function Home() {
   );
 
   return (
-    <AppScreenContainer header={<Header />}>
+    <AppScreenContainer header={<Header showBackButton={false} />}>
       {isLoading ? (
         <ActivityIndicator />
       ) : (
