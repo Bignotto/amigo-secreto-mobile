@@ -16,7 +16,6 @@ import React, { useState } from "react";
 import { useTheme } from "styled-components";
 import {
   AvatarContainer,
-  AvatarImage,
   ButtonsContainer,
   HeaderContainer,
   IconButtonWrapper,
@@ -50,7 +49,7 @@ export default function Header({ showBackButton = true }: HeaderProps) {
               <AntDesign name="back" size={24} color={theme.colors.white} />
             </IconButton>
           ) : (
-            <AppAvatar size={28} imagePath={`${user?.imageUrl}`} />
+            <AppAvatar size={32} imagePath={`${user?.imageUrl}`} />
           )}
         </IconButtonWrapper>
         <AppLogo size="md" color={theme.colors.white} />
@@ -74,13 +73,7 @@ export default function Header({ showBackButton = true }: HeaderProps) {
       </LogoContainer>
       {showHeaderButtons && (
         <HeaderContainer>
-          <AvatarContainer>
-            <AvatarImage
-              source={{
-                uri: `${user?.imageUrl}`,
-              }}
-            />
-          </AvatarContainer>
+          <AvatarContainer></AvatarContainer>
           <MidContainer>
             <AppText bold color={theme.colors.text_light}>
               Olá 👋

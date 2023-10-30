@@ -12,6 +12,7 @@ import supabase from "@services/supabase";
 import moment from "moment";
 import React, { useState } from "react";
 import { Alert } from "react-native";
+import { RectButton } from "react-native-gesture-handler";
 import { FriendsGroup } from "src/@types/FriendsGroup";
 import { useTheme } from "styled-components/native";
 import {
@@ -96,46 +97,55 @@ export default function SearchGroup() {
       <SearchResultsContainer>
         {searchResults.length > 0 &&
           searchResults.map((group) => (
-            <SearchResultItem key={group.id}>
-              <GroupLeft>
-                {group.drawn ? (
-                  <FontAwesome5
-                    name="check-circle"
-                    size={36}
-                    color={theme.colors.white}
-                  />
-                ) : (
-                  <FontAwesome5
-                    name="question-circle"
-                    size={36}
-                    color={theme.colors.white}
-                  />
-                )}
-              </GroupLeft>
-              <GroupMiddle>
-                <AppText bold size="lg" color={theme.colors.white}>
-                  {group.title}
-                </AppText>
-                <AppText color={theme.colors.white}>
-                  criado em: {moment(group.created_at).format("DD/MM/yyyy")}
-                </AppText>
-              </GroupMiddle>
-              <GroupRight>
-                <AppIconButton
-                  onPress={() =>
-                    navigation.navigate("FriendGroupDetails", {
-                      groupId: group.id,
-                    })
-                  }
-                >
-                  <FontAwesome5
-                    name="arrow-right"
-                    size={24}
-                    color={theme.colors.white}
-                  />
-                </AppIconButton>
-              </GroupRight>
-            </SearchResultItem>
+            <RectButton
+              key={group.id}
+              onPress={() =>
+                navigation.navigate("FriendGroupDetails", {
+                  groupId: group.id,
+                })
+              }
+            >
+              <SearchResultItem key={group.id}>
+                <GroupLeft>
+                  {group.drawn ? (
+                    <FontAwesome5
+                      name="check-circle"
+                      size={36}
+                      color={theme.colors.white}
+                    />
+                  ) : (
+                    <FontAwesome5
+                      name="question-circle"
+                      size={36}
+                      color={theme.colors.white}
+                    />
+                  )}
+                </GroupLeft>
+                <GroupMiddle>
+                  <AppText bold size="lg" color={theme.colors.white}>
+                    {group.title}
+                  </AppText>
+                  <AppText color={theme.colors.white}>
+                    criado em: {moment(group.created_at).format("DD/MM/yyyy")}
+                  </AppText>
+                </GroupMiddle>
+                <GroupRight>
+                  <AppIconButton
+                    onPress={() =>
+                      navigation.navigate("FriendGroupDetails", {
+                        groupId: group.id,
+                      })
+                    }
+                  >
+                    <FontAwesome5
+                      name="arrow-right"
+                      size={24}
+                      color={theme.colors.white}
+                    />
+                  </AppIconButton>
+                </GroupRight>
+              </SearchResultItem>
+            </RectButton>
           ))}
       </SearchResultsContainer>
     </AppScreenContainer>

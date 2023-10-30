@@ -9,6 +9,7 @@ import { StackParamList } from "@routes/Navigation.types";
 import supabase from "@services/supabase";
 import React, { useCallback, useEffect, useState } from "react";
 import { ActivityIndicator } from "react-native";
+import { RectButton } from "react-native-gesture-handler";
 import { UserGroups } from "src/@types/UserGroups";
 import { useTheme } from "styled-components";
 import { BottomContainer, Container, GroupList, TopWrapper } from "./styles";
@@ -70,13 +71,22 @@ export default function Dashboard() {
           <GroupList>
             {userGroups?.length > 0 &&
               userGroups.map((group) => (
-                <FriendGroupCard
-                  groupName={group.group_title}
-                  friendsCount={group.friends_count}
+                <RectButton
                   key={group.group_id}
-                  groupId={group.group_id}
-                  isDrawn={group.drawn}
-                />
+                  onPress={() =>
+                    navigation.navigate("FriendGroupDetails", {
+                      groupId: group.group_id,
+                    })
+                  }
+                >
+                  <FriendGroupCard
+                    groupName={group.group_title}
+                    friendsCount={group.friends_count}
+                    key={group.group_id}
+                    groupId={group.group_id}
+                    isDrawn={group.drawn}
+                  />
+                </RectButton>
               ))}
           </GroupList>
           <BottomContainer>

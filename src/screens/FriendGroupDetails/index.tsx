@@ -22,7 +22,7 @@ import { StackParamList } from "@routes/Navigation.types";
 import supabase from "@services/supabase";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
-import { Alert, View } from "react-native";
+import { ActivityIndicator, Alert, View } from "react-native";
 import { FriendsGroup } from "src/@types/FriendsGroup";
 import { GroupFriendsList } from "src/@types/GroupFriendsList";
 import { useTheme } from "styled-components";
@@ -78,6 +78,7 @@ export default function FriendGroupDetails() {
   }
 
   async function loadGroupFriends() {
+    setIsLoading(true);
     try {
       const { data, error } = await supabase
         .from("group_friends_list")
@@ -419,101 +420,110 @@ export default function FriendGroupDetails() {
         </GroupInfoWrapper>
       </GroupDetailsWrapper>
       <AppSpacer verticalSpace="xlg" />
-      {group?.group_owner_id === userId && !group?.drawn && (
-        <AppButton
-          title="Sortear grupo!"
-          variant="positive"
-          onPress={handleDrawGroup}
-        />
-      )}
-      {group?.drawn && (
-        <AppButton
-          title="Meu amigo secreto"
-          onPress={() =>
-            navigation.navigate("DrawFriendDetails", {
-              joinId: hasUser?.join_code ?? 0,
-            })
-          }
-        />
-      )}
-      <AppSpacer verticalSpace="xlg" />
-      {!hasUser ? (
-        <>
-          <AppText>
-            Entre com a senha enviada pelo criador do grupo para entrar!
-          </AppText>
-          <AppSpacer />
-          <AppInput
-            placeholder="senha"
-            value={groupPassword}
-            onChangeText={(text) => setGroupPassword(text)}
-          />
-          <AppSpacer />
-          <AppButton
-            title="Entrar no grupo!"
-            variant="positive"
-            onPress={handleJoinGroup}
-          />
-        </>
+      {isLoading ? (
+        <ActivityIndicator />
       ) : (
         <>
-          <FriendsListWrapper>
-            {userList.length > 0 &&
-              userList.map((user) => (
-                <View key={user.user_id}>
-                  <FriendCard>
-                    <AvatarWrapper>
-                      <AppAvatar imagePath={user.image_url} size={24} />
-                    </AvatarWrapper>
-                    <NameWrapper>
-                      <AppText>{user.user_name}</AppText>
-                      <AppSpacer horizontalSpace="sm" />
-                      {group?.group_owner_id === user.user_id && (
-                        <MaterialCommunityIcons
-                          name="shield-crown"
-                          size={20}
-                          color="yellow"
-                        />
-                      )}
-                    </NameWrapper>
-                    <ControlWrapper>
-                      {userId === group?.group_owner_id &&
-                        userId !== user.user_id && (
-                          <AppIconButton
-                            onPress={() =>
-                              confirmExcludeUser(user.user_name, user.join_code)
-                            }
-                          >
-                            <FontAwesome5
-                              name="times-circle"
-                              size={24}
-                              color={theme.colors.negative}
+          {group?.group_owner_id === userId && !group?.drawn && (
+            <AppButton
+              title="Sortear grupo!"
+              variant="positive"
+              onPress={handleDrawGroup}
+            />
+          )}
+          {group?.drawn && (
+            <AppButton
+              title="Meu amigo secreto"
+              onPress={() =>
+                navigation.navigate("DrawFriendDetails", {
+                  joinId: hasUser?.join_code ?? 0,
+                })
+              }
+            />
+          )}
+          <AppSpacer verticalSpace="xlg" />
+          {!hasUser || isLoading ? (
+            <>
+              <AppText>
+                Entre com a senha enviada pelo criador do grupo para entrar!
+              </AppText>
+              <AppSpacer />
+              <AppInput
+                placeholder="senha"
+                value={groupPassword}
+                onChangeText={(text) => setGroupPassword(text)}
+              />
+              <AppSpacer />
+              <AppButton
+                title="Entrar no grupo!"
+                variant="positive"
+                onPress={handleJoinGroup}
+              />
+            </>
+          ) : (
+            <>
+              <FriendsListWrapper>
+                {userList.length > 0 &&
+                  userList.map((user) => (
+                    <View key={user.user_id}>
+                      <FriendCard>
+                        <AvatarWrapper>
+                          <AppAvatar imagePath={user.image_url} size={24} />
+                        </AvatarWrapper>
+                        <NameWrapper>
+                          <AppText>{user.user_name}</AppText>
+                          <AppSpacer horizontalSpace="sm" />
+                          {group?.group_owner_id === user.user_id && (
+                            <MaterialCommunityIcons
+                              name="shield-crown"
+                              size={20}
+                              color="yellow"
                             />
-                          </AppIconButton>
-                        )}
-                    </ControlWrapper>
-                  </FriendCard>
-                  <AppSpacer verticalSpace="sm" />
-                </View>
-              ))}
-          </FriendsListWrapper>
-          <AppSpacer />
-          {!group?.drawn && (
-            <BottomWrapper>
-              {userId === group?.group_owner_id ? (
-                <AppButton
-                  title="Apagar grupo"
-                  variant="negative"
-                  onPress={confirmDeleteGroup}
-                />
-              ) : (
-                <AppButton
-                  title="Sair do grupo"
-                  variant="negative"
-                  onPress={confirmGroupLeave}
-                />
+                          )}
+                        </NameWrapper>
+                        <ControlWrapper>
+                          {userId === group?.group_owner_id &&
+                            userId !== user.user_id && (
+                              <AppIconButton
+                                onPress={() =>
+                                  confirmExcludeUser(
+                                    user.user_name,
+                                    user.join_code
+                                  )
+                                }
+                              >
+                                <FontAwesome5
+                                  name="times-circle"
+                                  size={24}
+                                  color={theme.colors.negative}
+                                />
+                              </AppIconButton>
+                            )}
+                        </ControlWrapper>
+                      </FriendCard>
+                      <AppSpacer verticalSpace="sm" />
+                    </View>
+                  ))}
+              </FriendsListWrapper>
+              <AppSpacer />
+              {!group?.drawn && (
+                <BottomWrapper>
+                  {userId === group?.group_owner_id ? (
+                    <AppButton
+                      title="Apagar grupo"
+                      variant="negative"
+                      onPress={confirmDeleteGroup}
+                    />
+                  ) : (
+                    <AppButton
+                      title="Sair do grupo"
+                      variant="negative"
+                      onPress={confirmGroupLeave}
+                    />
+                  )}
+                </BottomWrapper>
               )}
-            </BottomWrapper>
+            </>
           )}
         </>
       )}
