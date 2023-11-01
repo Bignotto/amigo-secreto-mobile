@@ -483,7 +483,8 @@ export default function FriendGroupDetails() {
                         </NameWrapper>
                         <ControlWrapper>
                           {userId === group?.group_owner_id &&
-                            userId !== user.user_id && (
+                            userId !== user.user_id &&
+                            !group?.drawn && (
                               <AppIconButton
                                 onPress={() =>
                                   confirmExcludeUser(
