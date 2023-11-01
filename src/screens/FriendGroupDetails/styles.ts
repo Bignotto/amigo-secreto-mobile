@@ -47,7 +47,6 @@ export const NameWrapper = styled.View`
 export const ControlWrapper = styled.View``;
 
 export const BottomWrapper = styled.View`
-  background-color: ${({ theme }) => theme.colors.shape_light};
   padding-bottom: 16px;
   padding-top: 20px;
 `;

@@ -351,7 +351,29 @@ export default function FriendGroupDetails() {
   }, []);
 
   return (
-    <AppScreenContainer header={<Header />}>
+    <AppScreenContainer
+      header={<Header />}
+      footerColor={theme.colors.shape_light}
+      footer={
+        !group?.drawn && (
+          <BottomWrapper>
+            {userId === group?.group_owner_id ? (
+              <AppButton
+                title="Apagar grupo"
+                variant="negative"
+                onPress={confirmDeleteGroup}
+              />
+            ) : (
+              <AppButton
+                title="Sair do grupo"
+                variant="negative"
+                onPress={confirmGroupLeave}
+              />
+            )}
+          </BottomWrapper>
+        )
+      }
+    >
       <AppSpacer verticalSpace="lg" />
       <GroupDetailsWrapper>
         <GroupInfoWrapper>
@@ -507,23 +529,6 @@ export default function FriendGroupDetails() {
                   ))}
               </FriendsListWrapper>
               <AppSpacer />
-              {!group?.drawn && (
-                <BottomWrapper>
-                  {userId === group?.group_owner_id ? (
-                    <AppButton
-                      title="Apagar grupo"
-                      variant="negative"
-                      onPress={confirmDeleteGroup}
-                    />
-                  ) : (
-                    <AppButton
-                      title="Sair do grupo"
-                      variant="negative"
-                      onPress={confirmGroupLeave}
-                    />
-                  )}
-                </BottomWrapper>
-              )}
             </>
           )}
         </>

@@ -1,10 +1,14 @@
 import { ReactNode } from "react";
-import { ViewProps } from "react-native";
+import { View, ViewProps } from "react-native";
 import { getStatusBarHeight } from "react-native-iphone-x-helper";
 import styled from "styled-components/native";
 
 export interface AppScreenContainerStylesProps extends ViewProps {
   children: ReactNode;
+}
+
+interface FooterProps {
+  color: string | undefined;
 }
 
 export const HeaderContainer = styled.View`
@@ -26,4 +30,12 @@ export const ScreenContainer = styled.View`
 export const HeaderSpace = styled.View`
   padding-top: ${() => getStatusBarHeight() + 8}px;
   background-color: ${({ theme }) => theme.colors.primary};
+`;
+
+export const FooterContainer = styled(View)<FooterProps>`
+  background-color: ${({ theme, color }) =>
+    color ? color : theme.colors.shape_light};
+  padding-left: 16px;
+  padding-right: 16px;
+  padding-bottom: 16px;
 `;
