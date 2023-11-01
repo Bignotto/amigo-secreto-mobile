@@ -1,7 +1,6 @@
 import { useAuth } from "@clerk/clerk-expo";
 import AppButton from "@components/AppButton";
 import AppInput from "@components/AppInput";
-import AppLogo from "@components/AppLogo";
 import AppScreenContainer from "@components/AppScreenContainer";
 import AppSpacer from "@components/AppSpacer";
 import AppText from "@components/AppText";
@@ -17,7 +16,7 @@ import moment from "moment";
 import React, { useState } from "react";
 import { ScrollView } from "react-native-gesture-handler";
 import { FriendsGroup } from "src/@types/FriendsGroup";
-import { FormContainer, LogoWrapper } from "./styles";
+import { FormContainer } from "./styles";
 
 export default function CreateFriendGroup() {
   const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
@@ -97,9 +96,6 @@ export default function CreateFriendGroup() {
   return (
     <AppScreenContainer header={<Header />}>
       <ScrollView showsVerticalScrollIndicator={false}>
-        <LogoWrapper>
-          <AppLogo />
-        </LogoWrapper>
         <AppSpacer verticalSpace="md" />
         <AppText size="xlg">Criar um grupo novo</AppText>
         <AppText>

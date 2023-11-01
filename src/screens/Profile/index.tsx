@@ -119,7 +119,17 @@ export default function Profile() {
             />
 
             <AppSpacer />
-            <AppButton title="Salvar" onPress={handleSaveProfile} />
+            <AppButton
+              title="Salvar"
+              onPress={handleSaveProfile}
+              variant="positive"
+            />
+            <AppSpacer verticalSpace="sm" />
+            <AppButton
+              title="Cancelar"
+              onPress={() => navigation.goBack()}
+              variant="negative"
+            />
           </FormContainer>
         </ScrollView>
       )}
