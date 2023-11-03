@@ -20,8 +20,9 @@ export default {
     text_gray: "#4A5568",
     text_disabled: "#718096",
 
-    shape_dark: "#606060",
-    shape_light: "#C0C0C0",
+    shape_dark: "#294760",
+    shape_light: "#C6D5E1",
+    // shape_light: "#C0C0C0",
     border: "#0B0B0B",
 
     white: "#FFFFFF",

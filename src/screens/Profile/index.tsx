@@ -85,12 +85,12 @@ export default function Profile() {
           <AppSpacer />
           <FormContainer>
             <AppInput
-              label="Tamanho que você veste?"
+              label="O tamanho das suas roupas"
               value={clothesSize}
               onChangeText={(text) => setClothesSize(text)}
               placeholder="38 GG"
             />
-
+            <AppSpacer />
             <AppInput
               label="Que número você calça?"
               value={shoeSize}

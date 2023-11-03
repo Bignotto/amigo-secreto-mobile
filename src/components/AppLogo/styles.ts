@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import { Text, TextProps } from "react-native";
+import { Text } from "react-native";
 import styled from "styled-components/native";
 
 const LogoSizes: { [size: string]: number } = {
@@ -14,7 +14,7 @@ const LineHeights: { [size: string]: number } = {
   lg: 80,
 };
 
-export interface AppLogoStyleProps extends TextProps {
+export interface AppLogoStyleProps {
   children?: ReactNode;
   size?: "lg" | "md" | "sm";
   color?: string;
