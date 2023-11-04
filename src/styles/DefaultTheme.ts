@@ -22,7 +22,6 @@ export default {
 
     shape_dark: "#294760",
     shape_light: "#C6D5E1",
-    // shape_light: "#C0C0C0",
     border: "#0B0B0B",
 
     white: "#FFFFFF",
@@ -36,15 +35,3 @@ export default {
     logo: "Pacifico_400Regular",
   },
 };
-
-/*
-FFFCF2
-CCC5B9
-403D39
-252422
-EB5E28
-
-positive 254441
-negative EB2828
-theblue  104D87
-*/

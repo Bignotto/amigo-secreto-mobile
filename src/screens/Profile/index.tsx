@@ -13,10 +13,12 @@ import supabase from "@services/supabase";
 import React, { useEffect, useState } from "react";
 import { ActivityIndicator } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
+import { useTheme } from "styled-components";
 import { FormContainer, TopScreenContainer } from "./styles";
 
 export default function Profile() {
   const { user } = useUser();
+  const theme = useTheme();
   const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
 
   const [isLoading, setIsLoading] = useState(true);
@@ -68,20 +70,26 @@ export default function Profile() {
   }
 
   return (
-    <AppScreenContainer>
+    <AppScreenContainer
+      header={
+        <TopScreenContainer>
+          <AppLogo size="md" color={theme.colors.white} />
+          <AppSpacer />
+          <AppAvatar imagePath={`${user?.imageUrl}`} size={180} />
+          <AppSpacer />
+          <AppText bold color={theme.colors.white}>
+            Perfil público de{" "}
+          </AppText>
+          <AppText size="xxlg" bold color={theme.colors.white}>
+            {user?.fullName}
+          </AppText>
+        </TopScreenContainer>
+      }
+    >
       {isLoading ? (
         <ActivityIndicator />
       ) : (
         <ScrollView showsVerticalScrollIndicator={false}>
-          <TopScreenContainer>
-            <AppLogo size="md" />
-            <AppSpacer />
-            <AppAvatar imagePath={`${user?.imageUrl}`} size={200} />
-            <AppSpacer />
-            <AppText size="lg" bold>
-              Perfil público de {user?.fullName}
-            </AppText>
-          </TopScreenContainer>
           <AppSpacer />
           <FormContainer>
             <AppInput
