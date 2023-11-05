@@ -3,6 +3,7 @@ import AppButton from "@components/AppButton";
 import AppSpacer from "@components/AppSpacer";
 import AppText from "@components/AppText";
 import FriendGroupCard from "@components/FriendGroupCard";
+import { Ionicons } from "@expo/vector-icons";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { StackParamList } from "@routes/Navigation.types";
@@ -65,6 +66,16 @@ export default function Dashboard() {
               size="sm"
               variant="solid"
               onPress={() => navigation.navigate("CreateFriendGroup")}
+              rightIcon={
+                <>
+                  <Ionicons
+                    name="add-sharp"
+                    size={24}
+                    color={theme.colors.white}
+                  />
+                  <AppSpacer horizontalSpace="md" />
+                </>
+              }
             />
           </TopWrapper>
           <AppSpacer verticalSpace="xlg" />
@@ -93,6 +104,13 @@ export default function Dashboard() {
             <AppButton
               title="Encontrar um grupo"
               onPress={() => navigation.navigate("SearchGroup")}
+              leftIcon={
+                <Ionicons
+                  name="ios-search"
+                  size={24}
+                  color={theme.colors.white}
+                />
+              }
             />
           </BottomContainer>
         </>
