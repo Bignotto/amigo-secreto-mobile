@@ -1,3 +1,4 @@
+import { rgba } from "polished";
 import styled from "styled-components/native";
 
 export const LogoWrapper = styled.View`
@@ -18,4 +19,10 @@ export const TwoColumnsWrapper = styled.View`
 
 export const DatePickerWrapper = styled.View`
   margin-left: 8px;
+`;
+
+export const FormError = styled.View`
+  background-color: ${({ theme }) => rgba(theme.colors.negative, 0.2)};
+  padding: 12px;
+  border-radius: 8px;
 `;

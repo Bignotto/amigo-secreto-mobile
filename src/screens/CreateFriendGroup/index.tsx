@@ -18,9 +18,11 @@ import React, { useState } from "react";
 import { ScrollView } from "react-native-gesture-handler";
 import { FriendsGroup } from "src/@types/FriendsGroup";
 import { useTheme } from "styled-components";
+import { validate } from "./formValidation";
 import {
   DatePickerWrapper,
   FormContainer,
+  FormError,
   TopContainer,
   TwoColumnsWrapper,
 } from "./styles";
@@ -38,6 +40,9 @@ export default function CreateFriendGroup() {
   const [partyLocation, setPartyLocation] = useState("");
   const [giftPrice, setGiftPrice] = useState("");
   const [groupPassword, setGroupPassword] = useState("");
+  const [formError, setFormError] = useState<string | undefined>(undefined);
+
+  const [isLoading, setIsLoading] = useState(false);
 
   const onChange = (
     event: DateTimePickerEvent,
@@ -52,14 +57,31 @@ export default function CreateFriendGroup() {
   };
 
   async function handleSaveNewGroup() {
+    setIsLoading(true);
+
+    const validation = validate({
+      title,
+      partyLocation,
+      partyTime,
+      groupPassword,
+      giftPrice,
+    });
+
+    if (validation) {
+      setFormError(validation);
+      setIsLoading(false);
+      return;
+    }
+
     if (
-      title.length === 0 ||
-      partyTime.length === 0 ||
-      partyLocation.length === 0 ||
+      title.length < 3 ||
+      partyTime.length < 3 ||
+      partyLocation.length < 3 ||
       giftPrice.length === 0 ||
-      groupPassword.length === 0
+      groupPassword.length < 3
     ) {
       console.log({ message: "algum campo em branco!" });
+      setIsLoading(false);
       return;
     }
     try {
@@ -120,7 +142,13 @@ export default function CreateFriendGroup() {
       }
     >
       <ScrollView showsVerticalScrollIndicator={false}>
-        <AppSpacer verticalSpace="xlg" />
+        <AppSpacer verticalSpace="md" />
+        {formError && (
+          <FormError>
+            <AppText color={theme.colors.negative}>{formError}</AppText>
+          </FormError>
+        )}
+        <AppSpacer verticalSpace="md" />
         <FormContainer>
           <AppInput
             label="Qual vai ser o nome do grupo?"
@@ -194,6 +222,7 @@ export default function CreateFriendGroup() {
           />
           <AppSpacer verticalSpace="lg" />
           <AppButton
+            isLoading={isLoading}
             onPress={handleSaveNewGroup}
             title="Criar grupo!"
             variant="positive"
@@ -207,6 +236,7 @@ export default function CreateFriendGroup() {
           />
           <AppSpacer verticalSpace="sm" />
           <AppButton
+            isLoading={isLoading}
             onPress={() => navigation.goBack()}
             title="Cancelar"
             variant="negative"
