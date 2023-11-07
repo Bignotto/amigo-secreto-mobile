@@ -65,6 +65,7 @@ export default function CreateFriendGroup() {
       partyTime,
       groupPassword,
       giftPrice,
+      partyDate,
     });
 
     if (validation) {

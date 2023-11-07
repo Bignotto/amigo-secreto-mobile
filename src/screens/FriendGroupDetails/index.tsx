@@ -226,6 +226,7 @@ export default function FriendGroupDetails() {
   }
 
   async function handleDeleteGroup() {
+    setIsLoading(true);
     try {
       const { data, error } = await supabase
         .from("user_friends_group")
@@ -248,6 +249,8 @@ export default function FriendGroupDetails() {
       navigation.goBack();
     } catch (error) {
       console.log({ error });
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -288,6 +291,11 @@ export default function FriendGroupDetails() {
   }
 
   async function handleDrawGroup() {
+    if (userList.length <= 3) {
+      Alert.alert("É preciso de pelo menos três amigos para sortear o grupo.");
+      return;
+    }
+
     setIsLoading(true);
     const friendsIds = userList.map((u) => u.user_id);
     const shuffleFriends = drawGroup(friendsIds);
@@ -516,6 +524,7 @@ export default function FriendGroupDetails() {
                   title="Apagar grupo"
                   variant="negative"
                   onPress={confirmDeleteGroup}
+                  isLoading={isLoading}
                   leftIcon={
                     <Ionicons
                       name="trash"
@@ -529,6 +538,7 @@ export default function FriendGroupDetails() {
                   title="Sair do grupo"
                   variant="negative"
                   onPress={confirmGroupLeave}
+                  isLoading={isLoading}
                   rightIcon={
                     <MaterialCommunityIcons
                       name="logout"
