@@ -36,7 +36,7 @@ export default function SignUp() {
           <ActivityIndicator />
         ) : (
           <>
-            <AppLogo size="lg" color="primary" />
+            <AppLogo size="lg" />
             <AppButton
               title="Entre com Google"
               onPress={appSignIn}

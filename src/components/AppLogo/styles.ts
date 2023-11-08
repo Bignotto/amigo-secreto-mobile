@@ -1,42 +1,31 @@
-import { RFValue } from "react-native-responsive-fontsize";
+import { ReactNode } from "react";
+import { Text } from "react-native";
 import styled from "styled-components/native";
 
-type AppTextColorProp = {
-  color?: "primary" | "secondary" | "positive" | "negative";
+const LogoSizes: { [size: string]: number } = {
+  sm: 28,
+  md: 32,
+  lg: 80,
 };
+
+const LineHeights: { [size: string]: number } = {
+  sm: 45,
+  md: 52,
+  lg: 80,
+};
+
+export interface AppLogoStyleProps {
+  children?: ReactNode;
+  size?: "lg" | "md" | "sm";
+  color?: string;
+}
 
 export const AppLogoContainer = styled.View``;
 
-export const AppLogoTextSM = styled.Text`
+export const AppLogoText = styled(Text)<AppLogoStyleProps>`
   font-family: ${({ theme }) => theme.fonts.logo};
-  font-size: ${RFValue(28)}px;
-`;
-
-export const AppLogoTextMD = styled.Text`
-  font-family: ${({ theme }) => theme.fonts.logo};
-  font-size: ${RFValue(32)}px;
-`;
-
-export const AppLogoTextLG = styled.Text<AppTextColorProp>`
-  font-family: ${({ theme }) => theme.fonts.logo};
-  color: ${({ theme, color }) => {
-    switch (color) {
-      case undefined:
-        return theme.colors.text;
-      case "negative":
-        return theme.colors.negative;
-      case "positive":
-        return theme.colors.positive;
-      case "primary":
-        return theme.colors.primary;
-      case "secondary":
-        return theme.colors.secondary;
-
-      default:
-        return "#FFFFFF";
-    }
-  }};
-  font-size: ${RFValue(80)}px;
-  line-height: 95px;
-  padding-top: 30px;
+  color: ${({ theme, color }) => (color ? color : theme.colors.text)};
+  font-size: ${({ theme, size = "md" }) => LogoSizes[size]}px;
+  line-height: ${({ theme, size = "md" }) => LineHeights[size]}px;
+  padding-top: ${({ theme, size = "md" }) => (size === "lg" ? 25 : 0)}px;
 `;

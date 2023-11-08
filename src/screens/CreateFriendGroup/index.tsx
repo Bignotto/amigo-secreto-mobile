@@ -1,11 +1,11 @@
 import { useAuth } from "@clerk/clerk-expo";
 import AppButton from "@components/AppButton";
 import AppInput from "@components/AppInput";
-import AppLogo from "@components/AppLogo";
 import AppScreenContainer from "@components/AppScreenContainer";
 import AppSpacer from "@components/AppSpacer";
 import AppText from "@components/AppText";
 import Header from "@components/Header";
+import { AntDesign, MaterialIcons } from "@expo/vector-icons";
 import DateTimePicker, {
   DateTimePickerEvent,
 } from "@react-native-community/datetimepicker";
@@ -17,9 +17,18 @@ import moment from "moment";
 import React, { useState } from "react";
 import { ScrollView } from "react-native-gesture-handler";
 import { FriendsGroup } from "src/@types/FriendsGroup";
-import { FormContainer, LogoWrapper } from "./styles";
+import { useTheme } from "styled-components";
+import { validate } from "./formValidation";
+import {
+  DatePickerWrapper,
+  FormContainer,
+  FormError,
+  TopContainer,
+  TwoColumnsWrapper,
+} from "./styles";
 
 export default function CreateFriendGroup() {
+  const theme = useTheme();
   const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
   const { userId } = useAuth();
 
@@ -31,6 +40,9 @@ export default function CreateFriendGroup() {
   const [partyLocation, setPartyLocation] = useState("");
   const [giftPrice, setGiftPrice] = useState("");
   const [groupPassword, setGroupPassword] = useState("");
+  const [formError, setFormError] = useState<string | undefined>(undefined);
+
+  const [isLoading, setIsLoading] = useState(false);
 
   const onChange = (
     event: DateTimePickerEvent,
@@ -45,14 +57,32 @@ export default function CreateFriendGroup() {
   };
 
   async function handleSaveNewGroup() {
+    setIsLoading(true);
+
+    const validation = validate({
+      title,
+      partyLocation,
+      partyTime,
+      groupPassword,
+      giftPrice,
+      partyDate,
+    });
+
+    if (validation) {
+      setFormError(validation);
+      setIsLoading(false);
+      return;
+    }
+
     if (
-      title.length === 0 ||
-      partyTime.length === 0 ||
-      partyLocation.length === 0 ||
+      title.length < 3 ||
+      partyTime.length < 3 ||
+      partyLocation.length < 3 ||
       giftPrice.length === 0 ||
-      groupPassword.length === 0
+      groupPassword.length < 3
     ) {
       console.log({ message: "algum campo em branco!" });
+      setIsLoading(false);
       return;
     }
     try {
@@ -95,19 +125,31 @@ export default function CreateFriendGroup() {
   }
 
   return (
-    <AppScreenContainer>
-      <Header />
+    <AppScreenContainer
+      header={
+        <>
+          <Header />
+          <TopContainer>
+            <AppText size="xxlg" bold color={theme.colors.white}>
+              Novo grupo
+            </AppText>
+            <AppSpacer verticalSpace="xlg" />
+            <AppText color={theme.colors.white}>
+              Preencha as informações abaixo para criar um novo grupo de Amigo
+              Secreto.
+            </AppText>
+          </TopContainer>
+        </>
+      }
+    >
       <ScrollView showsVerticalScrollIndicator={false}>
-        <LogoWrapper>
-          <AppLogo />
-        </LogoWrapper>
         <AppSpacer verticalSpace="md" />
-        <AppText size="xlg">Criar um grupo novo</AppText>
-        <AppText>
-          Preencha as informações abaixo para criar um novo grupo de Amigo
-          Secreto.
-        </AppText>
-        <AppSpacer verticalSpace="xlg" />
+        {formError && (
+          <FormError>
+            <AppText color={theme.colors.negative}>{formError}</AppText>
+          </FormError>
+        )}
+        <AppSpacer verticalSpace="md" />
         <FormContainer>
           <AppInput
             label="Qual vai ser o nome do grupo?"
@@ -117,21 +159,39 @@ export default function CreateFriendGroup() {
           />
           <AppSpacer verticalSpace="md" />
 
-          <AppInput
-            label="Quando vai ser a revelação?"
-            placeholder="23/12/2023"
-            editable={false}
-            value={`${moment(partyDate).format("DD/MM/yyyy")}`}
-          />
-          <AppButton title="Data" onPress={showDatepicker} />
-          {show && (
-            <DateTimePicker
-              testID="dateTimePicker"
-              value={partyDate}
-              is24Hour={true}
-              onChange={onChange}
+          <TwoColumnsWrapper>
+            <AppInput
+              label="Quando vai ser a revelação?"
+              placeholder="23/12/2023"
+              editable={false}
+              value={`${moment(partyDate).format("DD/MM/yyyy")}`}
             />
-          )}
+            <DatePickerWrapper>
+              <AppButton
+                title="Data"
+                onPress={showDatepicker}
+                outline
+                leftIcon={
+                  <>
+                    <AppSpacer />
+                    <AntDesign
+                      name="calendar"
+                      size={24}
+                      color={theme.colors.primary}
+                    />
+                  </>
+                }
+              />
+              {show && (
+                <DateTimePicker
+                  testID="dateTimePicker"
+                  value={partyDate}
+                  is24Hour={true}
+                  onChange={onChange}
+                />
+              )}
+            </DatePickerWrapper>
+          </TwoColumnsWrapper>
           <AppSpacer verticalSpace="md" />
           <AppInput
             label="Em qual horário?"
@@ -163,15 +223,28 @@ export default function CreateFriendGroup() {
           />
           <AppSpacer verticalSpace="lg" />
           <AppButton
+            isLoading={isLoading}
             onPress={handleSaveNewGroup}
             title="Criar grupo!"
             variant="positive"
+            leftIcon={
+              <MaterialIcons
+                name="group-add"
+                size={24}
+                color={theme.colors.white}
+              />
+            }
           />
           <AppSpacer verticalSpace="sm" />
           <AppButton
+            isLoading={isLoading}
             onPress={() => navigation.goBack()}
             title="Cancelar"
             variant="negative"
+            outline
+            leftIcon={
+              <AntDesign name="back" size={24} color={theme.colors.negative} />
+            }
           />
           <AppSpacer verticalSpace="xlg" />
         </FormContainer>

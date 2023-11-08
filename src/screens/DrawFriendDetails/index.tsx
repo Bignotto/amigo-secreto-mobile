@@ -1,5 +1,4 @@
 import AppAvatar from "@components/AppAvatar";
-import AppLogo from "@components/AppLogo";
 import AppScreenContainer from "@components/AppScreenContainer";
 import AppSpacer from "@components/AppSpacer";
 import AppText from "@components/AppText";
@@ -53,13 +52,8 @@ export default function DrawFriendDetails() {
     loadFriend();
   }, []);
 
-  //NEXT: finish drawn friend info card
-
   return (
-    <AppScreenContainer>
-      <Header />
-      <AppSpacer />
-      <AppLogo />
+    <AppScreenContainer header={<Header />}>
       <AppSpacer verticalSpace="xlg" />
       <FriendContainer>
         <AppText bold color={theme.colors.text_light}>
