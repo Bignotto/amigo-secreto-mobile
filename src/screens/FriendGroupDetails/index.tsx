@@ -273,7 +273,7 @@ export default function FriendGroupDetails() {
     }
 
     if (shuffleCount === 0) {
-      const move = Math.floor(Math.random() * (friends.length - 2 + 1) + 1);
+      const move = Math.floor(Math.random() * (friends.length - 1)) + 1;
       return moveItemsAhead(friends, move);
     }
 
@@ -290,12 +290,28 @@ export default function FriendGroupDetails() {
     return movedItems;
   }
 
-  async function handleDrawGroup() {
+  function confirmDrawGroup() {
     if (userList.length <= 3) {
       Alert.alert("É preciso de pelo menos três amigos para sortear o grupo.");
       return;
     }
 
+    return Alert.alert(
+      `Sortear ${group?.title}`,
+      `Tem certeza que quer fazer o sorteio do grupo?`,
+      [
+        {
+          text: "Sim",
+          onPress: handleDrawGroup,
+        },
+        {
+          text: "Não",
+        },
+      ]
+    );
+  }
+
+  async function handleDrawGroup() {
     setIsLoading(true);
     const friendsIds = userList.map((u) => u.user_id);
     const shuffleFriends = drawGroup(friendsIds);
@@ -436,7 +452,7 @@ export default function FriendGroupDetails() {
             <AppButton
               title="Sortear grupo!"
               variant="positive"
-              onPress={handleDrawGroup}
+              onPress={confirmDrawGroup}
             />
           )}
           {group?.drawn && (
@@ -517,7 +533,7 @@ export default function FriendGroupDetails() {
               <AppSpacer />
             </>
           )}
-          {!group?.drawn && (
+          {!group?.drawn && hasUser && (
             <BottomWrapper>
               {userId === group?.group_owner_id ? (
                 <AppButton
