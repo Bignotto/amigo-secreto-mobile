@@ -5,10 +5,13 @@ import AppScreenContainer from "@components/AppScreenContainer";
 import { useWarmUpBrowser } from "@hooks/warmUpBrowser";
 import React, { useState } from "react";
 import { ActivityIndicator } from "react-native";
+import { useTheme } from "styled-components";
 import { Container } from "./styles";
 
 export default function SignUp() {
   useWarmUpBrowser();
+
+  const theme = useTheme();
 
   const { startOAuthFlow } = useOAuth({ strategy: "oauth_google" });
 
@@ -36,7 +39,7 @@ export default function SignUp() {
           <ActivityIndicator />
         ) : (
           <>
-            <AppLogo size="lg" />
+            <AppLogo size="lg" color={theme.colors.primary} />
             <AppButton
               title="Entre com Google"
               onPress={appSignIn}
