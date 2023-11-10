@@ -5,3 +5,7 @@ export const Container = styled.View`
   justify-content: center;
   align-items: center;
 `;
+
+export const ContentWrapper = styled.View`
+  width: 80%;
+`;

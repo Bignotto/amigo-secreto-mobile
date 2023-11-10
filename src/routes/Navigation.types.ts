@@ -15,3 +15,11 @@ export type StackParamList = {
       }
     | undefined;
 };
+
+export type GuestParamList = {
+  NewAccount:
+    | {
+        email: string;
+      }
+    | undefined;
+};
