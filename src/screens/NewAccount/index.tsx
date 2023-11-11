@@ -53,11 +53,6 @@ export default function NewAccount() {
   }, []);
 
   async function handleCreateAccount() {
-    if (name.length === 0) {
-      Alert.alert("Você precisa preencher seu nome.");
-      return;
-    }
-
     if (password.length === 0 || confirmation.length === 0) {
       Alert.alert("Informe uma senha válida.");
       return;
@@ -108,12 +103,7 @@ export default function NewAccount() {
             {email.toLowerCase()}
           </AppText>
           <AppSpacer verticalSpace="lg" />
-          <AppInput
-            label="Qual o seu nome?"
-            placeholder="nome completo"
-            value={name}
-            onChangeText={(text) => setName(text)}
-          />
+
           <AppSpacer verticalSpace="lg" />
           <AppInput
             label="Senha:"

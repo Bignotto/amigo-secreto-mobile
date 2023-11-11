@@ -1,4 +1,4 @@
-import { useOAuth } from "@clerk/clerk-expo";
+import { useOAuth, useSignIn } from "@clerk/clerk-expo";
 import AppButton from "@components/AppButton";
 import AppInput from "@components/AppInput";
 import AppLogo from "@components/AppLogo";
@@ -14,7 +14,7 @@ import React, { useState } from "react";
 import { ActivityIndicator, Alert } from "react-native";
 import { useTheme } from "styled-components";
 import validator from "validator";
-import { Container, ContentWrapper } from "./styles";
+import { Container, ContentWrapper, LoginFormContainer } from "./styles";
 
 export default function SignUp() {
   useWarmUpBrowser();
@@ -22,9 +22,14 @@ export default function SignUp() {
   const theme = useTheme();
   const navigation = useNavigation<NativeStackNavigationProp<GuestParamList>>();
   const { startOAuthFlow } = useOAuth({ strategy: "oauth_google" });
+  const { signIn, setActive, isLoaded } = useSignIn();
 
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [logingIn, setLogingIn] = useState(false);
+
+  const [loginEmail, setLoginEmail] = useState("");
+  const [loginPassword, setLoginPassword] = useState("");
 
   async function appSignIn() {
     setIsLoading(true);
@@ -55,6 +60,44 @@ export default function SignUp() {
     navigation.navigate("NewAccount", { email });
   }
 
+  async function handleLogin() {
+    if (loginEmail.length === 0) {
+      Alert.alert("Preencha o seu e-mail");
+      return;
+    }
+
+    if (loginPassword.length === 0) {
+      Alert.alert("Preencha a sua senha");
+      return;
+    }
+
+    if (!isLoaded) {
+      return;
+    }
+    setLogingIn(true);
+
+    try {
+      const signedIn = await signIn.create({
+        identifier: loginEmail,
+        password: loginPassword,
+      });
+
+      if (signedIn.status !== "complete") {
+        console.log(JSON.stringify(signedIn, null, 2));
+      }
+
+      if (signedIn.status === "complete") {
+        await setActive({ session: signedIn.createdSessionId });
+      }
+      setLogingIn(false);
+    } catch (error: any) {
+      // console.error(JSON.stringify(error, null, 2));
+      if (error.errors[0].code === "form_password_incorrect") {
+        Alert.alert("E-mail ou senha inválidos. Tente novamente.");
+      }
+    }
+  }
+
   return (
     <AppScreenContainer>
       <Container>
@@ -75,7 +118,29 @@ export default function SignUp() {
               <AppButton title="Criar conta" onPress={handleNewAccount} />
               <AppSpacer verticalSpace="xlg" />
               <AppText>Ou entre com:</AppText>
-              <AppSpacer verticalSpace="sm" />
+              <LoginFormContainer>
+                <AppInput
+                  keyboardType="email-address"
+                  placeholder="e-mail"
+                  value={loginEmail}
+                  onChangeText={(text) => setLoginEmail(text)}
+                />
+                <AppSpacer verticalSpace="sm" />
+                <AppInput
+                  placeholder="senha"
+                  secureTextEntry={true}
+                  value={loginPassword}
+                  onChangeText={(text) => setLoginPassword(text)}
+                />
+                <AppSpacer verticalSpace="sm" />
+                <AppButton
+                  title="Login"
+                  outline
+                  onPress={handleLogin}
+                  isLoading={logingIn}
+                />
+              </LoginFormContainer>
+              <AppSpacer verticalSpace="xlg" />
               <AppButton
                 title="Google"
                 onPress={appSignIn}

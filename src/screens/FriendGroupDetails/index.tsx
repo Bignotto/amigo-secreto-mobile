@@ -291,7 +291,7 @@ export default function FriendGroupDetails() {
   }
 
   function confirmDrawGroup() {
-    if (userList.length <= 3) {
+    if (userList.length < 3) {
       Alert.alert("É preciso de pelo menos três amigos para sortear o grupo.");
       return;
     }

@@ -96,7 +96,9 @@ export default function Home() {
               <ProfileCompleteCard
                 avatarUrl={`${user?.imageUrl}`}
                 userName={`${
-                  userProfile?.name === null || userProfile?.name?.length === 0
+                  userProfile?.name === null
+                    ? user?.primaryEmailAddress?.emailAddress
+                    : userProfile?.name?.length === 0
                     ? user?.primaryEmailAddress?.emailAddress
                     : userProfile?.name
                 }`}

@@ -9,3 +9,5 @@ export const Container = styled.View`
 export const ContentWrapper = styled.View`
   width: 80%;
 `;
+
+export const LoginFormContainer = styled.View``;
