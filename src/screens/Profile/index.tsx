@@ -23,6 +23,7 @@ export default function Profile() {
 
   const [isLoading, setIsLoading] = useState(true);
 
+  const [name, setName] = useState("");
   const [clothesSize, setClothesSize] = useState("");
   const [shoeSize, setShoeSize] = useState("");
   const [likeThings, setLikeThings] = useState("");
@@ -37,6 +38,7 @@ export default function Profile() {
       console.log({ error });
     }
     if (data) {
+      setName(data[0].name);
       setClothesSize(data[0].clothesSize);
       setShoeSize(data[0].shoeSize);
       setLikeThings(data[0].likeThings);
@@ -54,6 +56,7 @@ export default function Profile() {
     let { data, error } = await supabase
       .from("users")
       .update({
+        name,
         clothesSize,
         shoeSize,
         likeThings,
@@ -81,7 +84,9 @@ export default function Profile() {
             Perfil público de{" "}
           </AppText>
           <AppText size="xxlg" bold color={theme.colors.white}>
-            {user?.fullName}
+            {name === null || name.length === 0
+              ? user?.primaryEmailAddress?.emailAddress
+              : name}
           </AppText>
         </TopScreenContainer>
       }
@@ -92,6 +97,12 @@ export default function Profile() {
         <ScrollView showsVerticalScrollIndicator={false}>
           <AppSpacer />
           <FormContainer>
+            <AppInput
+              label="Qual o seu nome?"
+              value={name}
+              onChangeText={(text) => setName(text)}
+            />
+            <AppSpacer />
             <AppInput
               label="O tamanho das suas roupas"
               value={clothesSize}

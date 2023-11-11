@@ -95,7 +95,11 @@ export default function Home() {
               <AppSpacer verticalSpace="xlg" />
               <ProfileCompleteCard
                 avatarUrl={`${user?.imageUrl}`}
-                userName={`${user?.firstName}`}
+                userName={`${
+                  userProfile?.name === null || userProfile?.name?.length === 0
+                    ? user?.primaryEmailAddress?.emailAddress
+                    : userProfile?.name
+                }`}
                 percentCompeted={profileComplete}
               />
             </>

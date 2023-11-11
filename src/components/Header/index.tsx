@@ -12,7 +12,10 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { StackParamList } from "@routes/Navigation.types";
-import React, { useState } from "react";
+import supabase from "@services/supabase";
+import React, { useEffect, useState } from "react";
+import { ActivityIndicator } from "react-native";
+import { UserProfile } from "src/@types/UserProfile";
 import { useTheme } from "styled-components";
 import {
   AvatarContainer,
@@ -35,6 +38,26 @@ export default function Header({ showBackButton = true }: HeaderProps) {
   const theme = useTheme();
 
   const [showHeaderButtons, setShowHeaderButtons] = useState(false);
+  const [userProfile, setUserProfile] = useState<UserProfile>();
+  const [isLoading, setIsLoading] = useState(true);
+
+  async function loadProfile() {
+    const { data, error } = await supabase
+      .from("users")
+      .select()
+      .eq("email", user?.primaryEmailAddress?.emailAddress);
+    if (error) {
+      console.log({ error, key: error.details });
+      return;
+    }
+
+    setUserProfile(data![0]);
+    setIsLoading(false);
+  }
+
+  useEffect(() => {
+    loadProfile();
+  });
 
   function toggleHeaderButtons() {
     setShowHeaderButtons((actual) => !actual);
@@ -78,9 +101,15 @@ export default function Header({ showBackButton = true }: HeaderProps) {
             <AppText bold color={theme.colors.text_light}>
               Olá 👋
             </AppText>
-            <AppText bold size="xlg" color={theme.colors.text_light}>
-              {user?.firstName}
-            </AppText>
+            {isLoading ? (
+              <ActivityIndicator />
+            ) : (
+              <AppText bold size="xlg" color={theme.colors.text_light}>
+                {userProfile?.name === null || userProfile?.name?.length === 0
+                  ? user?.primaryEmailAddress?.emailAddress
+                  : userProfile?.name}
+              </AppText>
+            )}
           </MidContainer>
           <ButtonsContainer>
             <AppIconButton onPress={() => navigation.navigate("Profile")}>
