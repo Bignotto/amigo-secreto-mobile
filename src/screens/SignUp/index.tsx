@@ -5,7 +5,7 @@ import AppLogo from "@components/AppLogo";
 import AppScreenContainer from "@components/AppScreenContainer";
 import AppSpacer from "@components/AppSpacer";
 import AppText from "@components/AppText";
-import { AntDesign } from "@expo/vector-icons";
+import { AntDesign, FontAwesome } from "@expo/vector-icons";
 import { useWarmUpBrowser } from "@hooks/warmUpBrowser";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
@@ -22,6 +22,8 @@ export default function SignUp() {
   const theme = useTheme();
   const navigation = useNavigation<NativeStackNavigationProp<GuestParamList>>();
   const { startOAuthFlow } = useOAuth({ strategy: "oauth_google" });
+  const { startOAuthFlow: appleLogin } = useOAuth({ strategy: "oauth_apple" });
+
   const { signIn, setActive, isLoaded } = useSignIn();
 
   const [email, setEmail] = useState("");
@@ -35,6 +37,21 @@ export default function SignUp() {
     setIsLoading(true);
     try {
       const { createdSessionId, setActive } = await startOAuthFlow();
+
+      if (createdSessionId) {
+        setActive!({ session: createdSessionId });
+      }
+    } catch (err) {
+      console.error("OAuth error", err);
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  async function appleSignIn() {
+    setIsLoading(true);
+    try {
+      const { createdSessionId, setActive } = await appleLogin();
 
       if (createdSessionId) {
         setActive!({ session: createdSessionId });
@@ -148,6 +165,19 @@ export default function SignUp() {
                 leftIcon={
                   <AntDesign
                     name="google"
+                    size={24}
+                    color={theme.colors.white}
+                  />
+                }
+              />
+              <AppSpacer verticalSpace="xlg" />
+              <AppButton
+                title="Apple"
+                onPress={appleSignIn}
+                isLoading={isLoading}
+                leftIcon={
+                  <FontAwesome
+                    name="apple"
                     size={24}
                     color={theme.colors.white}
                   />

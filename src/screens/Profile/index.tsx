@@ -1,4 +1,4 @@
-import { useUser } from "@clerk/clerk-expo";
+import { useAuth, useUser } from "@clerk/clerk-expo";
 import AppAvatar from "@components/AppAvatar";
 import AppButton from "@components/AppButton";
 import AppInput from "@components/AppInput";
@@ -9,15 +9,17 @@ import AppText from "@components/AppText";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { StackParamList } from "@routes/Navigation.types";
+import { api } from "@services/api";
 import supabase from "@services/supabase";
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator } from "react-native";
+import { ActivityIndicator, Alert } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { useTheme } from "styled-components";
 import { FormContainer, TopScreenContainer } from "./styles";
 
 export default function Profile() {
   const { user } = useUser();
+  const { getToken } = useAuth();
   const theme = useTheme();
   const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
 
@@ -70,6 +72,38 @@ export default function Profile() {
     }
 
     navigation.goBack();
+  }
+
+  async function handleDeleteAccount() {
+    const token = await getToken();
+    try {
+      const response = await api.get(`/user/remove/${user?.id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const { message } = response.data;
+
+      Alert.alert(message);
+    } catch (error) {
+      console.log(JSON.stringify(error));
+    }
+  }
+
+  async function confirmDeleteAccount() {
+    return Alert.alert(
+      `Excluir sua conta`,
+      `Tem certeza que quer excluir sua conta?`,
+      [
+        {
+          text: "Sim",
+          onPress: handleDeleteAccount,
+        },
+        {
+          text: "Não",
+        },
+      ]
+    );
   }
 
   return (
@@ -149,6 +183,14 @@ export default function Profile() {
               onPress={() => navigation.goBack()}
               variant="negative"
             />
+            <AppSpacer verticalSpace="sm" />
+            <AppButton
+              title="Excluir minha conta"
+              variant="negative"
+              outline
+              onPress={confirmDeleteAccount}
+            />
+            <AppSpacer verticalSpace="md" />
           </FormContainer>
         </ScrollView>
       )}

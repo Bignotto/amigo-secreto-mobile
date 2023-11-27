@@ -16,14 +16,17 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": false,
+      "bundleIdentifier": "com.bignotto.amigosecretomobile",
+      "buildNumber": "3"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#E0E0E0"
       },
-      "package": "com.bignotto.amigosecretomobile"
+      "package": "com.bignotto.amigosecretomobile",
+      "versionCode": 2
     },
     "web": {
       "favicon": "./assets/favicon.png"
