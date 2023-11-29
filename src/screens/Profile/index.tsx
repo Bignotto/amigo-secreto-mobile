@@ -19,7 +19,7 @@ import { FormContainer, TopScreenContainer } from "./styles";
 
 export default function Profile() {
   const { user } = useUser();
-  const { getToken } = useAuth();
+  const { getToken, signOut } = useAuth();
   const theme = useTheme();
   const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
 
@@ -83,8 +83,27 @@ export default function Profile() {
         },
       });
       const { message } = response.data;
+      if (message === "Success") {
+        let { data, error } = await supabase
+          .from("users")
+          .update({
+            email: null,
+            name: null,
+            clothesSize: null,
+            shoeSize: null,
+            likeThings: null,
+            dontLikeThings: null,
+          })
+          .eq("id", user?.id);
+        if (error) {
+          console.log({ error });
+          return;
+        }
+        signOut();
+        return Alert.alert("Sua conta foi excluída.");
+      }
 
-      Alert.alert(message);
+      return Alert.alert("Erro ao excluir sua conta.");
     } catch (error) {
       console.log(JSON.stringify(error));
     }

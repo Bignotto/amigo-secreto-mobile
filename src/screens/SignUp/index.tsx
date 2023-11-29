@@ -108,10 +108,15 @@ export default function SignUp() {
       }
       setLogingIn(false);
     } catch (error: any) {
-      // console.error(JSON.stringify(error, null, 2));
+      //console.error(JSON.stringify(error, null, 2));
       if (error.errors[0].code === "form_password_incorrect") {
         Alert.alert("E-mail ou senha inválidos. Tente novamente.");
       }
+      if (error.errors[0].code === "form_identifier_not_found") {
+        Alert.alert("Usuário não encontrado. Tente criar uma nova conta.");
+      }
+    } finally {
+      setLogingIn(false);
     }
   }
 
