@@ -5,6 +5,7 @@ import CreateFriendGroup from "@screens/CreateFriendGroup";
 import DrawFriendDetails from "@screens/DrawFriendDetails";
 import FriendGroupDetails from "@screens/FriendGroupDetails";
 import Home from "@screens/Home";
+import NewAccount from "@screens/NewAccount";
 import OAuthSignIn from "@screens/OAuthSignIn";
 import Profile from "@screens/Profile";
 import SearchGroup from "@screens/SearchGroup";
@@ -22,6 +23,7 @@ export default function Routes() {
           }}
         >
           <Stack.Screen name="SignUp" component={SignUp} />
+          <Stack.Screen name="NewAccount" component={NewAccount} />
         </Stack.Navigator>
       </SignedOut>
       <SignedIn>
